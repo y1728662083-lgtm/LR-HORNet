@@ -22,7 +22,6 @@ lookup_checkpoint() {
     2) pattern='*patch_0512*repeat_05_seed_42*best_model.pt' ;;
     3) pattern='*patch_0008*repeat_01_seed_42*best_model.pt' ;;
     4) pattern='*patch_0032*repeat_01_seed_42*best_model.pt' ;;
-    5) pattern='*patch_0064*repeat_04_seed_42*best_model.pt' ;;
     *) echo "Unknown rank: $rank" >&2; return 2 ;;
   esac
   path="$(find "$CHECKPOINT_ROOT" -type f -path "$pattern" -print -quit)"
@@ -36,7 +35,6 @@ rank_fields() {
     2) echo 'rank02_patch0512_repeat05_test041 rank02_patch0512_repeat05_test041.yaml' ;;
     3) echo 'rank03_patch0008_repeat01_test034 rank03_patch0008_repeat01_test034.yaml' ;;
     4) echo 'rank04_patch0032_repeat01_test034 rank04_patch0032_repeat01_test034.yaml' ;;
-    5) echo 'rank05_patch0064_repeat04_test034 rank05_patch0064_repeat04_test034.yaml' ;;
     *) return 2 ;;
   esac
 }

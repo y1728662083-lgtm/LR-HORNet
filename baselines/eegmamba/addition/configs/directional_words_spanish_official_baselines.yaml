@@ -1,0 +1,70 @@
+seed: 42
+
+data:
+  dataset: directional_words
+  root: data/directional_words
+  task: covert_words
+  subjects:
+    - spanish/sub0
+    - spanish/sub1
+    - spanish/sub2
+    - spanish/sub3
+    - spanish/sub4
+    - spanish/sub5
+    - spanish/sub6
+    - spanish/sub7
+    - spanish/sub8
+    - spanish/sub9
+  sessions: auto
+  standardize: true
+  n_electrode_groups: 2
+  options:
+    include_next: false
+    harmonize_within_language: true
+
+split:
+  fold_indices: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+  adapt_held_out_subjects: true
+
+input_adapter:
+  source_sampling_rate_hz: 500
+  target_sampling_rate_hz: 200
+  patch_size_samples: 200
+  patch_remainder: zero_pad
+
+models:
+  eegmamba:
+    enabled: true
+    source_root: official_sources/EEGMamba
+    checkpoint: weights/pretrained_EEGMamba.pth
+    checkpoint_required: true
+    classifier: avgpooling_patch_reps
+    training:
+      batch_size: 32
+      epochs: 50
+      patience: 50
+      seed: 3407
+      learning_rate: 0.0001
+      head_learning_rate_multiplier: 5.0
+      weight_decay: 0.05
+      label_smoothing: 0.1
+      warmup_epochs: 0
+      minimum_learning_rate: 0.000001
+      gradient_accumulation_steps: 1
+      gradient_clip_norm: 1.0
+      amp: false
+      scheduler: eegmamba_official_cosine
+      selection_metric: cohen_kappa
+      early_stopping: false
+      train_drop_last: false
+      eval_batch_size_multiplier: 1.0
+      deterministic: true
+      cudnn_benchmark: false
+
+training:
+  device: cuda:0
+  monitor: accuracy
+  pin_memory: true
+  cpu_threads_per_process: 4
+  cache_preprocessed_trials: true
+  output_root: outputs/directional_words_spanish

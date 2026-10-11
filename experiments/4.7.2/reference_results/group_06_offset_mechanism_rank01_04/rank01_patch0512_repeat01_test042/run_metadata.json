@@ -1,8 +1,8 @@
 {
-  "project_root": "/root/autodl-tmp/paper4",
-  "config": "/root/autodl-tmp/paper4/deformable_study/yaml/generated/group_02/patch_0512/fold_01/repeat_01_seed_42.yaml",
+  "project_root": ".",
+  "config": "experiments/4.7.2/configs/group06_offset_mechanism/rank01_patch0512_repeat01_test042.yaml",
   "config_sha256": "0ace106e12257d86928ebd2dd788ef7bc94bc5961c1f399e3305b77a292f268d",
-  "checkpoint": "/root/autodl-tmp/paper4/deformable_study/output/group_02/patch_0512/fold_01/repeat_01_seed_42/imagine/group4_patchLstm_deformableLstm/fold_01/best_model.pt",
+  "checkpoint": "external_checkpoints/group_06_offset_mechanism/rank01_patch0512_repeat01_test042/best_model.pt",
   "checkpoint_sha256": "cd8b8b69e4cd85649c399c644f86115bd4c836fce5be97acdcb865d935c32b8f",
   "model": "group4_patchLstm_deformableLstm",
   "task": "imagine",

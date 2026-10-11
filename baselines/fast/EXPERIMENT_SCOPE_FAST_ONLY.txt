@@ -1,0 +1,18 @@
+Current terminal sequence status:
+- pytest completed: 9 passed.
+- dependency/config preflight completed: 36 FAST fits planned.
+- real-data input check stopped before training because of checker-only ID/count issues.
+- no model training was launched by the pasted terminal sequence.
+
+Training scope after input check succeeds:
+- model: FAST only
+- datasets: ds003626, Russian directional words, Spanish directional words,
+  Bimodal inner speech
+- total: 36 fits
+- Paper4 group4_patchLstm_deformableLstm: NOT scheduled
+
+Code evidence:
+- all fast_native_*.yaml files contain only models.fast;
+- run_fast_native_all_datasets.py rejects any model set other than {fast};
+- its --models argument accepts only fast;
+- dispatch_fast_native.py always passes --models fast.

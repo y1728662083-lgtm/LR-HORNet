@@ -2,7 +2,10 @@
 
 No metric is entered manually. The script reads every ``test_metrics.json``
 and its corresponding ``training_log.csv``, validates the five-model by
-ten-fold design, and writes run-level and model-level CSV files.
+ten-fold design, and writes run-level and model-level CSV files. To avoid an
+unnecessary duplicate training campaign, the final LR-HORNet stage reuses the
+ten-fold ds003626 main-experiment results from Section 4.4.1; their hashes and
+metrics are checked against the main result table.
 
 Run from any working directory:
 
@@ -23,8 +26,13 @@ import pandas as pd
 
 
 SCRIPT_DIR = Path(__file__).resolve().parent
-PROJECT_ROOT = SCRIPT_DIR.parents[2]
-DEFAULT_RESULTS_ROOT = PROJECT_ROOT / "最终结果" / "实验" / "4.5" / "imagine"
+PROJECT_ROOT = SCRIPT_DIR.parents[1]
+DEFAULT_RESULTS_ROOT = (
+    PROJECT_ROOT / "experiments" / "4.5" / "reference_results"
+)
+MAIN_RESULT_TABLE = (
+    PROJECT_ROOT / "results" / "4.4.1" / "fold_level_results_with_val_acc.csv"
+)
 EXPECTED_FOLDS = list(range(1, 11))
 
 
@@ -52,7 +60,7 @@ MODEL_SPECS = (
         4,
     ),
     ModelSpec(
-        "本文模型",
+        "lr_hornet_main",
         "group4_patchLstm_deformableLstm",
         "LR-HORNet",
         5,
@@ -213,6 +221,54 @@ def validate_design(run_df: pd.DataFrame) -> None:
             raise ValueError(f"{column} contains a value outside [0, 1]")
 
 
+def validate_main_result_provenance(run_df: pd.DataFrame) -> None:
+    """Confirm that the final stage is the released ds003626 main result."""
+    main_df = pd.read_csv(MAIN_RESULT_TABLE)
+    expected = main_df.loc[
+        (main_df["dataset_key"] == "ds003626")
+        & (main_df["model"] == "LR-HORNet")
+    ].copy()
+    observed = run_df.loc[
+        run_df["model_key"] == "group4_patchLstm_deformableLstm"
+    ].copy()
+    if sorted(expected["fold"].astype(int)) != EXPECTED_FOLDS:
+        raise ValueError("The Section 4.4.1 LR-HORNet fold set is incomplete")
+    if sorted(observed["fold"].astype(int)) != EXPECTED_FOLDS:
+        raise ValueError("The reused LR-HORNet fold set is incomplete")
+
+    expected = expected.set_index("fold")
+    observed = observed.set_index("fold")
+    string_pairs = (
+        ("metrics_sha256", "metrics_sha256"),
+        ("training_log_sha256", "training_log_sha256"),
+    )
+    numeric_pairs = (
+        ("accuracy", "accuracy"),
+        ("balanced_accuracy", "balanced_accuracy"),
+        ("macro_f1", "macro_f1"),
+        ("best_validation_accuracy", "val_accuracy"),
+    )
+    for fold in EXPECTED_FOLDS:
+        for observed_column, expected_column in string_pairs:
+            if str(observed.at[fold, observed_column]) != str(
+                expected.at[fold, expected_column]
+            ):
+                raise ValueError(
+                    f"Main-result hash mismatch in fold {fold}: "
+                    f"{observed_column}"
+                )
+        for observed_column, expected_column in numeric_pairs:
+            if not np.isclose(
+                float(observed.at[fold, observed_column]),
+                float(expected.at[fold, expected_column]),
+                atol=1e-12,
+            ):
+                raise ValueError(
+                    f"Main-result metric mismatch in fold {fold}: "
+                    f"{observed_column}"
+                )
+
+
 def summarize_models(run_df: pd.DataFrame) -> pd.DataFrame:
     """Compute unweighted LOSO-fold means and sample standard deviations."""
     summary = (
@@ -272,15 +328,32 @@ def generate_result_tables(
 
     run_df = load_run_level_results(results_root)
     validate_design(run_df)
+    validate_main_result_provenance(run_df)
     summary_df = summarize_models(run_df)
+    reported_df = summary_df[
+        [
+            "model_key",
+            "n_folds",
+            "accuracy_mean",
+            "accuracy_sd",
+            "balanced_accuracy_mean",
+            "macro_f1_mean",
+        ]
+    ].rename(columns={"model_key": "model", "n_folds": "folds"})
 
     output_paths = {
         "run_level": output_dir / "run_level_results.csv",
         "model_summary": output_dir / "model_summary.csv",
+        "reported_summary": (
+            PROJECT_ROOT / "results" / "4.5" / "reported_results_summary.csv"
+        ),
     }
     write_status = {
         "run_level": export_csv(run_df, output_paths["run_level"]),
         "model_summary": export_csv(summary_df, output_paths["model_summary"]),
+        "reported_summary": export_csv(
+            reported_df, output_paths["reported_summary"]
+        ),
     }
     return run_df, summary_df, output_paths, write_status
 

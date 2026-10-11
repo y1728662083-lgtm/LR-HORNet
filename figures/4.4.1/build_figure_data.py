@@ -11,6 +11,7 @@ convention while adapting the count to each dataset's input geometry.
 
 from __future__ import annotations
 
+import math
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -19,16 +20,8 @@ import pandas as pd
 
 
 SCRIPT_DIR = Path(__file__).resolve().parent
-PROJECT_ROOT = SCRIPT_DIR.parents[2]
-SUMMARY_ROOT = (
-    PROJECT_ROOT
-    / "最终结果"
-    / "实验"
-    / "4.4"
-    / "4.4.1"
-    / "dataset_result"
-    / "summary_by_dataset"
-)
+REPOSITORY_ROOT = SCRIPT_DIR.parents[1]
+SUMMARY_ROOT = REPOSITORY_ROOT / "results" / "4.4.1"
 
 MODEL_ORDER = (
     "LR-HORNet",
@@ -69,6 +62,7 @@ class DatasetGeometry:
     sample_rate: int
     patch_size: int
     patch_stride: int
+    pad_incomplete_patch: bool
     resampled_times_200hz: int
     baseline_patches: int
     fast_window: int
@@ -76,10 +70,10 @@ class DatasetGeometry:
 
 
 GEOMETRY = {
-    "ds003626": DatasetGeometry(128, 1153, 4, 256, 128, 64, 901, 5, 256, 128),
-    "bimodal_inner_speech": DatasetGeometry(64, 359, 8, 512, 256, 128, 140, 1, 256, 128),
-    "directional_words_russian": DatasetGeometry(34, 250, 6, 250, 125, 63, 200, 1, 250, 125),
-    "directional_words_spanish": DatasetGeometry(38, 750, 6, 500, 250, 125, 300, 2, 500, 250),
+    "ds003626": DatasetGeometry(128, 1153, 4, 256, 128, 64, False, 901, 5, 256, 128),
+    "bimodal_inner_speech": DatasetGeometry(64, 359, 8, 512, 256, 128, True, 140, 1, 256, 128),
+    "directional_words_russian": DatasetGeometry(34, 250, 6, 250, 125, 63, True, 200, 1, 250, 125),
+    "directional_words_spanish": DatasetGeometry(38, 750, 6, 500, 250, 125, True, 300, 2, 500, 250),
 }
 
 
@@ -108,7 +102,11 @@ def eegnet_flops(g: DatasetGeometry) -> int:
 
 
 def lr_hornet_flops(g: DatasetGeometry) -> int:
-    n_patches = (g.times - g.patch_size) // g.patch_stride + 1
+    patch_span = max(0, g.times - g.patch_size)
+    if g.pad_incomplete_patch:
+        n_patches = math.ceil(patch_span / g.patch_stride) + 1
+    else:
+        n_patches = patch_span // g.patch_stride + 1
     effective_times = g.patch_size + (n_patches - 1) * g.patch_stride
     recurrent_steps = g.channels * n_patches * g.patch_size
     recurrent_per_step = 2 * 4 * 8 * (1 + 8)

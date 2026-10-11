@@ -2,11 +2,13 @@
 
 Official reproduction package for **LR-HORNet: a cross-dataset stable compact inner-speech EEG decoding network based on local recurrence and history-driven offset resampling**.
 
-LR-HORNet combines a patch-wise local recurrent encoder with a history-conditioned offset resampler. The repository contains the training pipeline, paper configurations, section-level ablations, processed result tables, and editable plotting sources. Raw EEG data, checkpoints, and per-run logs are intentionally excluded.
+LR-HORNet combines a patch-wise local recurrent encoder with a history-conditioned offset resampler. The repository contains the training and preprocessing pipeline, paper configurations, comparison-model reproduction archives, section-level ablations, validated result tables, editable plotting sources, and the 36 validation-selected LR-HORNet checkpoints from the main experiment. Raw EEG data and large third-party pretrained weights are not redistributed.
 
 ## Repository contents
 
     .
+    ├── baselines/             # Finalized comparison-model reproduction archives
+    ├── checkpoints/main/      # 36 validation-selected LR-HORNet state dictionaries
     ├── configs/main/          # Four cross-dataset LR-HORNet configurations
     ├── experiments/          # Section 4.4.2–4.8.2 experiment packages
     ├── figures/              # Plot data, scripts, PNG, and SVG outputs
@@ -71,6 +73,8 @@ For Bimodal Inner Speech, validate preprocessing inputs first:
 
 The main configurations implement calibrated leave-one-subject-out evaluation. Each fold holds out one test subject and the next subject cyclically for validation; class-stratified calibration halves from both held-out subjects are added to training. See [docs/DATASETS.md](docs/DATASETS.md) before comparing results with a different split.
 
+LR right-boundary handling is explicit in each main configuration. Setting `pad_incomplete_patch: true` zero-pads only the incomplete final Patch; setting it to `false` crops an uncovered suffix. The exact per-dataset sample counts are reported in [docs/DATASETS.md](docs/DATASETS.md).
+
 ## Reproduce ablations and figures
 
 Each subdirectory under experiments/ is self-contained at the configuration/script level and uses the shared root main.py and src/ code. For example:
@@ -79,13 +83,13 @@ Each subdirectory under experiments/ is self-contained at the configuration/scri
 
 Run python experiments/<section>/scripts/<runner>.py --help when using PowerShell or when explicit arguments are preferred. The section map and protocol caveats are in [docs/EXPERIMENTS.md](docs/EXPERIMENTS.md).
 
-Figures whose source tables pass the result-provenance audit can be regenerated from their local CSV sources:
+Figures whose source tables pass the result-provenance audit can be regenerated from their checked-in source records:
 
     python scripts/reproduce_figures.py
 
 ## Reproducibility boundary
 
-Aggregate CSV files and figure-level source tables are included. Checkpoints, raw EEG, and large per-run logs are excluded from Git history. Several archived exploratory experiments have known incompleteness or provenance constraints; these are disclosed in [docs/RESULTS_AUDIT.md](docs/RESULTS_AUDIT.md) and must not be interpreted as complete repeated-seed benchmarks. Sections 4.5, 4.6.3, and 4.7.1 are intentionally excluded from the one-command figure rebuild until their legacy plot tables are reconciled with the formal result summaries.
+Aggregate CSV files, figure-level source tables, source metrics for Sections 4.5, 4.6.3, and 4.7.1, and all main LR-HORNet checkpoints are included. Raw EEG, large third-party pretrained weights, and non-selected exploratory checkpoints remain outside Git history. Download locations, pinned revisions, and hashes for required EEGMamba and LaBraM pretrained weights are recorded under `baselines/`. Known protocol constraints are disclosed in [docs/RESULTS_AUDIT.md](docs/RESULTS_AUDIT.md). Section 4.5 reuses the Section 4.4.1 LR-HORNet main result for its final stage to avoid duplicating the full ten-fold training cost; the figure builder verifies the reused file hashes and metrics against the main result table.
 
 ## Validation
 

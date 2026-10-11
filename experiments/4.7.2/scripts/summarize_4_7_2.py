@@ -27,7 +27,6 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--visual-diagnostics", type=Path, required=True)
     parser.add_argument("--mechanism-root", type=Path, required=True)
-    parser.add_argument("--rank5-archive", type=Path)
     parser.add_argument("--output-dir", type=Path, required=True)
     args = parser.parse_args()
     visual = read(args.visual_diagnostics.resolve())
@@ -36,20 +35,14 @@ def main() -> int:
     for rank, path in enumerate(rank_dirs, 1):
         causal_path = path / "causal_ablation_summary.csv"
         shift_path = path / "artificial_shift_summary.csv"
-        status.append({"rank": rank, "result_dir": path.name, "causal_complete": int(causal_path.is_file()), "artificial_shift_complete": int(shift_path.is_file()), "included_in_statistics": int(rank <= 4 and causal_path.is_file() and shift_path.is_file())})
+        status.append({"rank": rank, "result_dir": path.name, "causal_complete": int(causal_path.is_file()), "artificial_shift_complete": int(shift_path.is_file()), "included_in_statistics": int(causal_path.is_file() and shift_path.is_file())})
         for row in read(causal_path) if causal_path.is_file() else []:
             causal_rows.append({"rank": rank, "result_dir": path.name, **row})
         for row in read(shift_path) if shift_path.is_file() else []:
             shift_rows.append({"rank": rank, "result_dir": path.name, **row})
-    if args.rank5_archive and args.rank5_archive.resolve().is_dir():
-        folders = [path for path in args.rank5_archive.resolve().rglob("rank05_*") if path.is_dir()]
-        if folders:
-            path = folders[0]
-            status.append({"rank": 5, "result_dir": path.name, "causal_complete": int((path / "causal_ablation_summary.csv").is_file()), "artificial_shift_complete": int((path / "artificial_shift_summary.csv").is_file()), "included_in_statistics": 0})
-
     aggregate = []
     for mode in ("learned", "zero", "shuffled", "random_matched"):
-        selected = [row for row in causal_rows if row.get("mode") == mode and int(row["rank"]) <= 4]
+        selected = [row for row in causal_rows if row.get("mode") == mode]
         aggregate.append({
             "mode": mode,
             "checkpoints": len(selected),

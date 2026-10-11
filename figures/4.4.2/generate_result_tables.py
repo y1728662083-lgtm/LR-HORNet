@@ -8,6 +8,10 @@ archived run, this script reads ``test_metrics.json`` for test accuracy and
 * ``run_level_results.csv``: one row per run, with relative source paths;
 * ``condition_summary.csv``: mean and sample standard deviation over five runs.
 
+For each fixed test subject, varying the validation subject also changes the
+remaining base-training subjects. The resulting condition therefore combines
+validation-subject and training-composition sensitivity.
+
 Run from any working directory:
 
     python generate_result_tables.py

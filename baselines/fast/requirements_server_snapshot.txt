@@ -1,0 +1,16 @@
+# Versions reported by the AutoDL preflight on 2026-10-10
+torch==2.3.0+cu121
+mne==1.12.1
+numpy==1.26.4
+pandas==3.0.6
+scikit-learn==1.9.1
+scipy==1.17.1
+matplotlib==3.9.0
+tqdm==4.66.2
+PyYAML==6.0.1
+
+# Imported by the author-released FAST.py; preserve the working server
+# environment versions when archiving the full environment.
+einops
+pytorch-lightning
+transformers

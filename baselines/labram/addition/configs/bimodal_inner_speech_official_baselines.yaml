@@ -1,0 +1,63 @@
+seed: 42
+
+data:
+  dataset: bimodal_inner_speech
+  root: data/bimodal_inner_speech
+  task: inner_word
+  subjects: [1, 2, 3, 5]
+  sessions: [EEG]
+  standardize: true
+  n_electrode_groups: 16
+  options:
+    derivatives_root: derivatives/paper4/bimodal
+
+split:
+  fold_indices: [0, 1, 2, 3]
+  adapt_held_out_subjects: true
+
+input_adapter:
+  # The released BDF and unchanged official preprocessing retain 512 Hz.
+  source_sampling_rate_hz: 512
+  target_sampling_rate_hz: 200
+  patch_size_samples: 200
+  patch_remainder: zero_pad
+
+models:
+  labram:
+    enabled: true
+    source: official_sources/LaBraM/modeling_finetune.py
+    checkpoint: weights/labram-base-official.safetensors
+    checkpoint_required: true
+    checkpoint_kind: student_mirror
+    init_values: 0.1
+    drop_path_rate: 0.1
+    layer_decay: 0.65
+    training:
+      batch_size: 64
+      epochs: 50
+      patience: 50
+      seed: 0
+      learning_rate: 0.0005
+      head_learning_rate_multiplier: 1.0
+      weight_decay: 0.05
+      label_smoothing: 0.1
+      warmup_epochs: 5
+      minimum_learning_rate: 0.000001
+      gradient_accumulation_steps: 1
+      gradient_clip_norm: 0.0
+      amp: true
+      scheduler: labram_official_warmup_cosine
+      selection_metric: accuracy
+      early_stopping: false
+      train_drop_last: true
+      eval_batch_size_multiplier: 1.5
+      deterministic: false
+      cudnn_benchmark: true
+
+training:
+  device: cuda:0
+  monitor: accuracy
+  pin_memory: true
+  cpu_threads_per_process: 4
+  cache_preprocessed_trials: true
+  output_root: outputs/bimodal_inner_speech

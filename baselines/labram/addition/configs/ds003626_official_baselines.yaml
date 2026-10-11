@@ -1,0 +1,52 @@
+seed: 42
+
+data:
+  dataset: ds003626
+  root: data/ds003626
+  task: imagine
+  subjects: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+  sessions: [1, 2, 3]
+  standardize: true
+  n_electrode_groups: 4
+
+split:
+  # 0-based internally; all 10 test subjects are covered once.
+  fold_indices: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+  # true invokes Paper4's 50/50 stratified validation/test-subject calibration.
+  adapt_held_out_subjects: true
+
+input_adapter:
+  source_sampling_rate_hz: 256
+  target_sampling_rate_hz: 200
+  patch_size_samples: 200
+  patch_remainder: zero_pad
+
+models:
+  labram:
+    enabled: true
+    source: official_sources/LaBraM/modeling_finetune.py
+    checkpoint: weights/labram-base-official.safetensors
+    checkpoint_required: true
+    checkpoint_kind: student_mirror
+    init_values: 0.1
+    drop_path_rate: 0.1
+    layer_decay: 0.65
+    training:
+      batch_size: 2
+      epochs: 50
+      patience: 15
+      learning_rate: 0.0005
+      head_learning_rate_multiplier: 1.0
+      weight_decay: 0.05
+      label_smoothing: 0.0
+      warmup_epochs: 5
+      minimum_learning_rate: 0.000001
+      gradient_accumulation_steps: 8
+      gradient_clip_norm: 3.0
+      amp: true
+
+training:
+  device: cuda:0
+  monitor: accuracy
+  pin_memory: true
+  output_root: outputs/ds003626

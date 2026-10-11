@@ -8,12 +8,18 @@ This is not identical to strict subject-independent LOSO. Any comparison must st
 
 ## Main dataset configurations
 
-| Config | Sampling rate | Patch | Stride | Folds | Archived comparison repeats |
-|---|---:|---:|---:|---:|---:|
-| ds003626.yaml | 256 Hz | 128 samples (0.5 s) | 64 samples (0.25 s) | 10 | 1 per fold |
-| bimodal_inner_speech.yaml | 512 Hz | 256 samples (0.5 s) | 128 samples (0.25 s) | 4 | 5 per fold |
-| directional_words_russian.yaml | 250 Hz | 125 samples (0.5 s) | 63 samples (approximately 0.25 s) | 12 | 5 per fold |
-| directional_words_spanish.yaml | 500 Hz | 250 samples (0.5 s) | 125 samples (0.25 s) | 10 | 5 per fold |
+| Config | Input length | Sampling rate | Patch | Stride | LR right boundary | Folds | Archived comparison repeats |
+|---|---:|---:|---:|---:|---|---:|---:|
+| ds003626.yaml | 1153 | 256 Hz | 128 samples (0.5 s) | 64 samples (0.25 s) | Crop 1 sample | 10 | 1 per fold |
+| bimodal_inner_speech.yaml | 359 | 512 Hz | 256 samples (0.5 s) | 128 samples (0.25 s) | Zero-pad 25 samples | 4 | 5 per fold |
+| directional_words_russian.yaml | 250 | 250 Hz | 125 samples (0.5 s) | 63 samples (approximately 0.25 s) | Zero-pad 1 sample | 12 | 5 per fold |
+| directional_words_spanish.yaml | 750 | 500 Hz | 250 samples (0.5 s) | 125 samples (0.25 s) | Exact; no crop or padding | 10 | 5 per fold |
+
+LR uses only complete patches when `pad_incomplete_patch: false`, so an
+uncovered suffix is cropped. With `pad_incomplete_patch: true`, the patch count
+is rounded upward and only the incomplete final patch is right-padded with
+zeros. This setting reproduces the dataset-specific boundary handling used by
+the archived main experiments.
 
 The checked-in main YAML files execute one run for each listed fold. Repeated-run orchestration was performed outside main.py; repeated archives used the same configured seed (42), so their dispersion reflects residual training nondeterminism rather than independent seed sampling.
 
@@ -25,4 +31,4 @@ The checked-in main YAML files execute one run for each listed fold. Repeated-ru
 
 ## Data distribution
 
-No raw EEG is included. Users are responsible for obtaining each dataset under its original terms. After download, edit only data.root if the suggested data/ layout is not used. Do not commit local paths, participant data, generated derivatives, or checkpoints.
+No raw EEG is included. Users are responsible for obtaining each dataset under its original terms. After download, edit only data.root if the suggested data/ layout is not used. Do not commit local paths, participant data, generated derivatives, or unselected training artifacts. The 36 validation-selected LR-HORNet checkpoints released with this repository are documented under `checkpoints/main/`.

@@ -1,0 +1,11 @@
+# Historical model source and runner target Braindecode 1.8.1.
+braindecode==1.8.1
+torch>=2.3
+mne>=1.10
+numpy
+scipy
+pandas
+scikit-learn
+PyYAML
+einops
+

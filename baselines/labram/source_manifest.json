@@ -1,0 +1,9 @@
+{
+  "LaBraM": {
+    "repository": "https://github.com/935963004/LaBraM.git",
+    "commit": "c431221e6cfd23dbfa9950e0180682fb322b0548",
+    "checkpoint_repository": "https://huggingface.co/eeg-telecom-paris/labram-base-official",
+    "checkpoint_revision": "99fffc632f3e9a9e8c500eefbc75d74777cb7d6d",
+    "checkpoint_sha256": "f41dcf13b2ad84bfca4f0ce24da041608c8ca197ff174b2e16a2f19dd245b476"
+  }
+}

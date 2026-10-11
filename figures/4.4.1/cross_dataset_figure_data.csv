@@ -5,13 +5,13 @@
 1,ds003626,ds003626,4,EEGMamba,25.78703703703703,4.84335676051722,3278047,5960000000,5960.0,linear-token theoretical estimate normalized to audited ds003626 estimate,128,1153,4
 1,ds003626,ds003626,5,FAST,25.58148148148148,3.8688903780285098,257380,941790000,941.79,architecture formula normalized to audited ds003626 profile,128,1153,4
 1,ds003626,ds003626,6,LaBraM,24.13518518518518,2.39160769775742,5820740,11344907200,11344.9072,analytical operator count,128,1153,4
-2,bimodal_inner_speech,Bimodal,1,LR-HORNet,21.68381211180124,3.42760873015669,4938,12553216,12.553216,analytical operator count,64,359,8
+2,bimodal_inner_speech,Bimodal,1,LR-HORNet,21.68381211180124,3.42760873015669,4938,23547904,23.547904,analytical operator count,64,359,8
 2,bimodal_inner_speech,Bimodal,2,EEGNet,17.78435559006211,4.74402323170549,3544,24426240,24.42624,analytical operator count,64,359,8
 2,bimodal_inner_speech,Bimodal,3,ATCNet,16.84782608695652,4.14067190575731,34080,31304641,31.304641,architecture formula normalized to audited ds003626 profile,64,359,8
 2,bimodal_inner_speech,Bimodal,4,EEGMamba,15.60267857142857,1.37815616432438,3278851,596003040,596.00304,linear-token theoretical estimate normalized to audited ds003626 estimate,64,359,8
 2,bimodal_inner_speech,Bimodal,5,FAST,14.51086956521739,1.31842494246828,191784,159136011,159.136011,architecture formula normalized to audited ds003626 profile,64,359,8
 2,bimodal_inner_speech,Bimodal,6,LaBraM,15.90644409937888,4.45530140609193,5821544,790976000,790.976,analytical operator count,64,359,8
-3,directional_words_russian,Directional Words-Russian,1,LR-HORNet,32.63635736547011,13.076114503022579,3592,7003776,7.003776,analytical operator count,34,250,6
+3,directional_words_russian,Directional Words-Russian,1,LR-HORNet,32.63635736547011,13.076114503022579,3592,10156800,10.1568,analytical operator count,34,250,6
 3,directional_words_russian,Directional Words-Russian,2,EEGNet,26.993625569102598,10.68968930097501,2326,9077760,9.07776,analytical operator count,34,250,6
 3,directional_words_russian,Directional Words-Russian,3,ATCNet,24.22852504336404,14.12473380089578,29724,10231572,10.231572,architecture formula normalized to audited ds003626 profile,34,250,6
 3,directional_words_russian,Directional Words-Russian,4,EEGMamba,28.938790793884838,20.97575939023451,3278449,316627315,316.627315,linear-token theoretical estimate normalized to audited ds003626 estimate,34,250,6

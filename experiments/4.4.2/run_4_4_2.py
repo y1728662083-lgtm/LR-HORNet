@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-"""Prepare and run the complete Section 4.4.2 validation-subject sweep."""
+"""Run the Section 4.4.2 validation/training-composition sweep.
+
+For a fixed test subject, changing the validation subject also changes the
+subjects remaining in the base-training pool. The experiment therefore does
+not isolate validation-subject identity from training-set composition.
+"""
 
 from __future__ import annotations
 
@@ -287,4 +292,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

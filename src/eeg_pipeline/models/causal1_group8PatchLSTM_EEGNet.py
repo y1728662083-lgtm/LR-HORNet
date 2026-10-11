@@ -25,6 +25,10 @@ from braindecode.functional import glorot_weight_zero_bias
 from braindecode.modules import LinearWithConstraint
 
 from eeg_pipeline.models.causal1_EEGNet import causal1_EEGNet
+from eeg_pipeline.models._patch_boundary import (
+    fit_right_boundary,
+    patch_layout,
+)
 from eeg_pipeline.models.causal1_groupnorm_EEGNet import (
     _group_norm_from_batch_norm,
 )
@@ -69,6 +73,7 @@ class _ElectrodeGroupPatchLSTMTemporal(nn.Module):
         patch_stride: Optional[int] = None,
         n_electrode_groups: int = 8,
         allow_uneven_groups: bool = False,
+        pad_incomplete_patch: bool = False,
         device=None,
         dtype=None,
     ) -> None:
@@ -95,6 +100,9 @@ class _ElectrodeGroupPatchLSTMTemporal(nn.Module):
         if not isinstance(allow_uneven_groups, bool):
             raise TypeError("allow_uneven_groups must be a bool.")
         self.allow_uneven_groups = allow_uneven_groups
+        if not isinstance(pad_incomplete_patch, bool):
+            raise TypeError("pad_incomplete_patch must be a bool.")
+        self.pad_incomplete_patch = pad_incomplete_patch
         base_size, remainder = divmod(
             self.n_chans, self.n_electrode_groups
         )
@@ -154,13 +162,14 @@ class _ElectrodeGroupPatchLSTMTemporal(nn.Module):
                 f"{self.patch_size}."
             )
 
-        n_patches = (
-            (n_times - self.patch_size) // self.patch_stride + 1
+        n_patches, effective_n_times = patch_layout(
+            n_times,
+            self.patch_size,
+            self.patch_stride,
+            pad_incomplete_patch=self.pad_incomplete_patch,
         )
-        effective_n_times = (
-            self.patch_size + (n_patches - 1) * self.patch_stride
-        )
-        trimmed = input[:, 0, :, :effective_n_times]
+        temporal_input = fit_right_boundary(input, effective_n_times)
+        trimmed = temporal_input[:, 0, :, :]
 
         group_outputs = []
         for group_index, lstm in enumerate(self.group_lstms):
@@ -240,7 +249,9 @@ class causal1_group8PatchLSTM_EEGNet(causal1_EEGNet):
     parameterized LSTMs split the electrode axis and defaults to eight.
     For overlapping patches, only each later patch's final ``patch_stride``
     outputs are emitted; its leading overlap is recurrent warm-up context.
-    Incomplete samples at the right edge are removed.
+    By default, incomplete samples at the right edge are removed. Setting
+    ``pad_incomplete_patch=True`` instead right-pads only the final patch with
+    zeros, so every observed sample remains covered.
 
     Apart from ``conv_temporal`` and an automatically resized classifier when
     the effective feature length changes, inherited EEGNet layers are kept.
@@ -259,6 +270,7 @@ class causal1_group8PatchLSTM_EEGNet(causal1_EEGNet):
         patch_stride: Optional[int] = None,
         n_electrode_groups: int = 8,
         allow_uneven_groups: bool = False,
+        pad_incomplete_patch: bool = False,
         # EEGNet parameters retained from causal1_EEGNet
         final_conv_length: str | int = "auto",
         pool_mode: str = "mean",
@@ -299,6 +311,8 @@ class causal1_group8PatchLSTM_EEGNet(causal1_EEGNet):
         n_electrode_groups = _positive_integer(
             "n_electrode_groups", n_electrode_groups
         )
+        if not isinstance(pad_incomplete_patch, bool):
+            raise TypeError("pad_incomplete_patch must be a bool.")
         if final_conv_length != "auto":
             raise ValueError(
                 "causal1_group8PatchLSTM_EEGNet requires "
@@ -410,6 +424,7 @@ class causal1_group8PatchLSTM_EEGNet(causal1_EEGNet):
             patch_stride=patch_stride,
             n_electrode_groups=n_electrode_groups,
             allow_uneven_groups=allow_uneven_groups,
+            pad_incomplete_patch=pad_incomplete_patch,
             device=reference_weight.device,
             dtype=reference_weight.dtype,
         )
@@ -419,14 +434,15 @@ class causal1_group8PatchLSTM_EEGNet(causal1_EEGNet):
         self.patch_overlap = self.patch_size - self.patch_stride
         self.n_electrode_groups = n_electrode_groups
         self.allow_uneven_groups = allow_uneven_groups
-        self.patch_count = (
-            (self.n_times - self.patch_size) // self.patch_stride + 1
+        self.pad_incomplete_patch = pad_incomplete_patch
+        self.patch_count, self.effective_n_times = patch_layout(
+            self.n_times,
+            self.patch_size,
+            self.patch_stride,
+            pad_incomplete_patch=self.pad_incomplete_patch,
         )
-        self.effective_n_times = (
-            self.patch_size
-            + (self.patch_count - 1) * self.patch_stride
-        )
-        self.discarded_tail = self.n_times - self.effective_n_times
+        self.right_padding = max(0, self.effective_n_times - self.n_times)
+        self.discarded_tail = max(0, self.n_times - self.effective_n_times)
 
         patch_feature_time = self._patch_feature_time_length()
         if patch_feature_time < 1:

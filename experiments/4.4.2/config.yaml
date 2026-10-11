@@ -1,7 +1,9 @@
-# Section 4.4.2 validation-subject sweep.
+# Section 4.4.2 validation-subject/training-composition sweep.
 #
 # This file is both a directly runnable example (test subject 6, validation
 # subject 1) and the template used by run_4_4_2.py for the complete sweep.
+# Changing the validation subject also changes the subjects remaining in the
+# base-training pool; the two effects are not isolated in this protocol.
 
 seed: 42
 

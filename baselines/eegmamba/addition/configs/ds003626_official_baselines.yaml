@@ -1,0 +1,49 @@
+seed: 42
+
+data:
+  dataset: ds003626
+  root: data/ds003626
+  task: imagine
+  subjects: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+  sessions: [1, 2, 3]
+  standardize: true
+  n_electrode_groups: 4
+
+split:
+  # 0-based internally; all 10 test subjects are covered once.
+  fold_indices: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+  # true invokes Paper4's 50/50 stratified validation/test-subject calibration.
+  adapt_held_out_subjects: true
+
+input_adapter:
+  source_sampling_rate_hz: 256
+  target_sampling_rate_hz: 200
+  patch_size_samples: 200
+  patch_remainder: zero_pad
+
+models:
+  eegmamba:
+    enabled: true
+    source_root: official_sources/EEGMamba
+    checkpoint: weights/pretrained_EEGMamba.pth
+    checkpoint_required: true
+    classifier: avgpooling_patch_reps
+    training:
+      batch_size: 4
+      epochs: 50
+      patience: 15
+      learning_rate: 0.0001
+      head_learning_rate_multiplier: 5.0
+      weight_decay: 0.05
+      label_smoothing: 0.1
+      warmup_epochs: 5
+      minimum_learning_rate: 0.000001
+      gradient_accumulation_steps: 4
+      gradient_clip_norm: 1.0
+      amp: true
+
+training:
+  device: cuda:0
+  monitor: accuracy
+  pin_memory: true
+  output_root: outputs/ds003626

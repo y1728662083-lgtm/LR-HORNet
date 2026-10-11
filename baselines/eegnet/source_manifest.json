@@ -1,0 +1,43 @@
+{
+  "archive_model": "braindecode_eegnet",
+  "official_architecture": "EEGNet",
+  "braindecode_version": "1.8.1",
+  "construction_rule": "Public Braindecode class, dataset metadata only, no architecture hyperparameter override",
+  "historical_results": {
+    "ds003626_folds": 10,
+    "bimodal_inner_speech_folds": 4,
+    "directional_words_russian_folds": 12,
+    "directional_words_spanish_folds": 10
+  },
+  "key_sources": [
+    {
+      "source": "src/eeg_pipeline/models/baseline_model.py",
+      "sha256": "dff59d978cfb717459815ebf33036598431badeb5cdb8787bee55b1c3a5291de"
+    },
+    {
+      "source": "src/braindecode/version.py",
+      "sha256": "e9cb9de69569c2732ccfa7f165503aa96710552a4b41777475d37a8a9fb533ff"
+    },
+    {
+      "source": "src/braindecode/models/eegnet.py",
+      "sha256": "6e22097cfc456748b63d4cf4fc717ea26879e42c7a7588dc8ee3d511faaacb66"
+    },
+    {
+      "source": "configs/braindecode_baselines.yaml",
+      "sha256": "0b0549de65efd7bb893126781c3527c974b2bba202324707047182b0b5dd0251"
+    },
+    {
+      "source": "anxiliary/yaml/bimodal_inner_speech.yaml",
+      "sha256": "82251f6812117ccdf862f04cfa6a668c9afc411d11804b8d9fd8f37f359cfcb4"
+    },
+    {
+      "source": "anxiliary/yaml/directional_russian_covert_words.yaml",
+      "sha256": "297f7a64b12f3f71747eb16c5bd3c1c81d2c3e79ceee4ab671eeae936fd7efc8"
+    },
+    {
+      "source": "anxiliary/yaml/directional_spanish_covert_words.yaml",
+      "sha256": "3346195bfeddc29d01fe7b2a402ea953ffe7928a42119fa925ae7c2bd4860df7"
+    }
+  ]
+}
+

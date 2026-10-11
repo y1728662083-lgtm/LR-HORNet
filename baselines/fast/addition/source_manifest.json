@@ -1,0 +1,21 @@
+{
+  "FAST": {
+    "repository": "https://github.com/Jiang-Muyun/FAST.git",
+    "commit": "d84f20b1963830b54224a753a6c99a9c5491f2d6"
+  },
+  "EEGMamba": {
+    "repository": "https://github.com/wjq-learning/EEGMamba.git",
+    "commit": "dbc83fa072744201e8897aeb9f65007b952ad323",
+    "checkpoint_repository": "https://huggingface.co/weighting666/EEGMamba",
+    "checkpoint_revision": "0b060d87acd6f23bf1d0b852bf1726064f335f97",
+    "checkpoint_sha256": "b452bb29ecf1d6131ba82a50c6e13823ec1d660d9009d013e691d19b2916f4fe"
+  },
+  "LaBraM": {
+    "repository": "https://github.com/935963004/LaBraM.git",
+    "commit": "c431221e6cfd23dbfa9950e0180682fb322b0548",
+    "checkpoint_repository": "https://huggingface.co/eeg-telecom-paris/labram-base-official",
+    "checkpoint_revision": "99fffc632f3e9a9e8c500eefbc75d74777cb7d6d",
+    "checkpoint_sha256": "f41dcf13b2ad84bfca4f0ce24da041608c8ca197ff174b2e16a2f19dd245b476",
+    "checkpoint_note": "Public mirror labelled official; not an author-hosted download."
+  }
+}

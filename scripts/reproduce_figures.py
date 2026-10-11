@@ -10,11 +10,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 FIGURE_ROOT = ROOT / "figures"
-SKIP_SECTIONS = {
-    "4.5": "plot-level LR-HORNet row conflicts with the formal 4.5 summary",
-    "4.6.3": "legacy 1/2-group rows conflict with the formal incomplete-run record",
-    "4.7.1": "legacy LSTM table counts a duplicated fold as ten folds",
-}
+SKIP_SECTIONS: dict[str, str] = {}
 
 
 def commands_for(section: Path) -> list[Path]:
@@ -36,7 +32,7 @@ def main() -> None:
         relative = script.relative_to(ROOT)
         print(f"[figure] {relative}", flush=True)
         subprocess.run(
-            [sys.executable, script.name],
+            [sys.executable, "-B", script.name],
             cwd=script.parent,
             check=True,
         )

@@ -20,12 +20,16 @@ Thumbs.db
 data/
 derivatives/
 outputs/
-checkpoints/
+checkpoints/*
+!checkpoints/main/
+!checkpoints/main/**
 logs/
 *.pt
 *.pth
 *.ckpt
+*.safetensors
 *.log
+!checkpoints/main/**/*.pt
 
 # Local overrides and temporary files
 *.local.yaml

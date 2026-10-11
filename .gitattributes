@@ -6,3 +6,6 @@
 *.md text eol=lf
 *.csv text eol=lf
 *.png binary
+
+# Bundled upstream source snapshots preserve their original formatting.
+baselines/** -whitespace

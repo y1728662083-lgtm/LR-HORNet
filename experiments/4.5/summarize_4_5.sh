@@ -2,7 +2,7 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-RESULT_ROOT="${RESULT_ROOT:?Set RESULT_ROOT to the directory containing imagine/.}"
+RESULT_ROOT="${RESULT_ROOT:-$SCRIPT_DIR/reference_results}"
 
 arguments=(--result-root "$RESULT_ROOT")
 if [[ -n "${SUMMARY_OUTPUT:-}" ]]; then

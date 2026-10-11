@@ -10,12 +10,12 @@ import statistics
 from pathlib import Path
 
 
-MODEL_ORDER = (
-    "eegnet",
-    "causal1_eegnet",
-    "group4_causal1_deformableLstm",
-    "group4_patchLstm_noDeformation",
-    "group4_patchLstm_deformableLstm",
+MODEL_SOURCES = (
+    ("eegnet", "eegnet"),
+    ("causal1_eegnet", "causal1_eegnet"),
+    ("group4_causal1_deformableLstm", "group4_causal1_deformableLstm"),
+    ("group4_patchLstm_noDeformation", "group4_patchLstm_noDeformation"),
+    ("group4_patchLstm_deformableLstm", "lr_hornet_main"),
 )
 
 
@@ -30,15 +30,20 @@ def main() -> int:
     args = parse_args()
     root = args.result_root.resolve()
     rows = []
-    for model in MODEL_ORDER:
-        model_root = root / "imagine" / model
-        if not model_root.is_dir() and root.name == "imagine":
-            model_root = root / model
+    for model, source_directory in MODEL_SOURCES:
+        model_root = root / source_directory
+        if not model_root.is_dir():
+            model_root = root / "imagine" / source_directory
+        if not model_root.is_dir():
+            raise FileNotFoundError(model_root)
+        metric_paths = sorted(model_root.rglob("test_metrics.json"))
+        if len(metric_paths) != 10:
+            raise ValueError(
+                f"{model}: expected 10 test_metrics.json files, "
+                f"found {len(metric_paths)}"
+            )
         metrics = []
-        for fold in range(1, 11):
-            path = model_root / f"fold_{fold:02d}" / "test_metrics.json"
-            if not path.is_file():
-                raise FileNotFoundError(path)
+        for path in metric_paths:
             with path.open(encoding="utf-8") as file:
                 payload = json.load(file)
             metrics.append(payload)

@@ -281,13 +281,7 @@ def make_figure(
 
 
 def main() -> None:
-    run_df = pd.read_csv(SCRIPT_DIR / "run_level_results.csv")
-    summary_df = pd.read_csv(SCRIPT_DIR / "model_summary.csv")
-    table_paths = {
-        "run_level": SCRIPT_DIR / "run_level_results.csv",
-        "summary": SCRIPT_DIR / "model_summary.csv",
-    }
-    table_status = {name: False for name in table_paths}
+    run_df, summary_df, table_paths, table_status = generate_result_tables()
     figure_paths = make_figure(run_df, summary_df, SCRIPT_DIR)
 
     print("Validated design: 5 models x 10 LOSO folds = 50 results.")

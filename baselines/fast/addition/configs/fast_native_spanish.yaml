@@ -1,0 +1,70 @@
+seed: 42
+
+data:
+  dataset: directional_words
+  root: data/directional_words
+  task: covert_words
+  subjects:
+    - spanish/sub0
+    - spanish/sub1
+    - spanish/sub2
+    - spanish/sub3
+    - spanish/sub4
+    - spanish/sub5
+    - spanish/sub6
+    - spanish/sub7
+    - spanish/sub8
+    - spanish/sub9
+  sessions: auto
+  standardize: true
+  n_electrode_groups: 2
+  options:
+    include_next: false
+    harmonize_within_language: true
+    expected_common_channels: 38
+    target_sampling_rate_hz: 500
+    time_window_seconds: [-0.5, 1.0]
+
+split:
+  fold_indices: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+  adapt_held_out_subjects: true
+
+input_adapter:
+  source_sampling_rate_hz: 500
+  target_sampling_rate_hz: 500
+  patch_size_samples: 500
+  patch_remainder: zero_pad
+
+models:
+  fast:
+    enabled: true
+    source: official_sources/FAST/FAST.py
+    dim_cnn: 32
+    dim_token: 32
+    num_layers: 4
+    num_heads: 8
+    dropout: 0.1
+    head: Conv4Layers
+    window_samples: 500
+    stride_samples: 250
+    window_remainder: nearest
+    checkpoint: null
+    training:
+      batch_size: 16
+      epochs: 100
+      patience: 30
+      learning_rate: 0.0005
+      head_learning_rate_multiplier: 1.0
+      weight_decay: 0.01
+      label_smoothing: 0.0
+      warmup_epochs: 10
+      minimum_learning_rate: 0.00005
+      gradient_accumulation_steps: 1
+      gradient_clip_norm: 0.0
+      amp: true
+
+training:
+  device: cuda
+  monitor: accuracy
+  pin_memory: true
+  output_root: outputs/baselines/fast/directional_words_spanish

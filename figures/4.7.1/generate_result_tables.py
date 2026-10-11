@@ -19,9 +19,9 @@ import pandas as pd
 
 
 SCRIPT_DIR = Path(__file__).resolve().parent
-PROJECT_ROOT = SCRIPT_DIR.parents[2]
+REPOSITORY_ROOT = SCRIPT_DIR.parents[1]
 DEFAULT_RESULTS_ROOT = (
-    PROJECT_ROOT / "最终结果" / "实验" / "4.7" / "4.7.1"
+    REPOSITORY_ROOT / "experiments" / "4.7.1" / "reference_results"
 )
 EXPECTED_FOLDS = list(range(1, 11))
 

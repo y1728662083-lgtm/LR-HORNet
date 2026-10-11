@@ -20,15 +20,9 @@ import pandas as pd
 
 
 SCRIPT_DIR = Path(__file__).resolve().parent
-PROJECT_ROOT = SCRIPT_DIR.parents[2]
+REPOSITORY_ROOT = SCRIPT_DIR.parents[1]
 DEFAULT_RESULTS_ROOT = (
-    PROJECT_ROOT
-    / "最终结果"
-    / "实验"
-    / "4.6"
-    / "4.6.3"
-    / "fold1_recurrent_group_ablation"
-    / "fixed_seed42_repeat5"
+    REPOSITORY_ROOT / "experiments" / "4.6.3" / "reference_results"
 )
 EXPECTED_RUNS_PER_CONDITION = 5
 EXPECTED_SEED = 42

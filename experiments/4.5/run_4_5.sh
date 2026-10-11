@@ -8,7 +8,7 @@ DATA_ROOT="${DATA_ROOT:-$PROJECT_ROOT/../OpenNeruro_ds003626}"
 OUTPUT_ROOT="${OUTPUT_ROOT:-$PROJECT_ROOT/outputs/4.5}"
 GPU_ID="${GPU_ID:-0}"
 DEVICE="${DEVICE:-auto}"
-MODELS="${MODELS:-eegnet,causal1_eegnet,group4_causal1_deformableLstm,group4_patchLstm_noDeformation,group4_patchLstm_deformableLstm}"
+MODELS="${MODELS:-eegnet,causal1_eegnet,group4_causal1_deformableLstm,group4_patchLstm_noDeformation}"
 
 if [[ -n "$GPU_ID" ]]; then
   export CUDA_VISIBLE_DEVICES="$GPU_ID"

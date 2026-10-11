@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-"""Run the five progressive Section 4.5 ablation models."""
+"""Run the four independently trained Section 4.5 ablation stages.
+
+The complete LR-HORNet stage is available as an explicit ``--models`` choice,
+but the reported study reuses its Section 4.4.1 main result to avoid duplicate
+ten-fold training.
+"""
 
 from __future__ import annotations
 
@@ -35,6 +40,7 @@ MODEL_CONFIGS = OrderedDict(
         ),
     )
 )
+DEFAULT_ABLATION_MODELS = tuple(MODEL_CONFIGS)[:4]
 
 
 def parse_args() -> argparse.Namespace:
@@ -45,8 +51,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--device", default="auto")
     parser.add_argument(
         "--models",
-        default=",".join(MODEL_CONFIGS),
-        help="Comma-separated model labels from the five-model protocol.",
+        default=",".join(DEFAULT_ABLATION_MODELS),
+        help=(
+            "Comma-separated model labels. By default, run the four ablation "
+            "stages; the reported complete-model row reuses Section 4.4.1."
+        ),
     )
     parser.add_argument("--shard-index", type=int, default=0)
     parser.add_argument("--shard-count", type=int, default=1)

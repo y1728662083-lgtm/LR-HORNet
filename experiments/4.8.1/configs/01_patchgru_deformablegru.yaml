@@ -1,0 +1,54 @@
+seed: 42
+data:
+  root: data/ds003626
+  task: imagine
+  subjects:
+  - 1
+  - 2
+  - 3
+  - 4
+  - 5
+  - 6
+  - 7
+  - 8
+  - 9
+  - 10
+  sessions:
+  - 1
+  - 2
+  - 3
+  standardize: true
+  n_electrode_groups: 4
+split:
+  fold_indices:
+  - 0
+loader:
+  batch_size: 32
+  pin_memory: true
+model:
+  name: group4_patchGRU_deformableGRU
+  kwargs:
+    patch_size: 128
+    patch_stride: 64
+    n_electrode_groups: 4
+    offset_lstm_hidden_size: 8
+    offset_lstm_layers: 1
+    offset_lstm_dropout: 0.0
+    normalization: batchnorm
+training:
+  loss: cross_entropy
+  label_smoothing: 0.05
+  optimizer: adamw
+  learning_rate: 0.001
+  weight_decay: 0.0001
+  scheduler:
+    name: reduce_on_plateau
+    monitor: loss
+    factor: 0.5
+    patience: 15
+    min_learning_rate: 1.0e-05
+  epochs: 100
+  patience: 40
+  monitor: accuracy
+  device: auto
+  output_root: outputs/4.8/4.8.1/01_patchgru_deformablegru

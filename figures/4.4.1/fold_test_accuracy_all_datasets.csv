@@ -1,0 +1,217 @@
+﻿dataset_order,dataset_key,model_order,model,fold,dataset_label,test_accuracy_pct
+1,ds003626,1,LR-HORNet,1,ds003626,35.0
+1,ds003626,1,LR-HORNet,2,ds003626,29.166666666666668
+1,ds003626,1,LR-HORNet,3,ds003626,31.11111111111111
+1,ds003626,1,LR-HORNet,4,ds003626,34.166666666666664
+1,ds003626,1,LR-HORNet,5,ds003626,32.5
+1,ds003626,1,LR-HORNet,6,ds003626,25.92592592592592
+1,ds003626,1,LR-HORNet,7,ds003626,26.66666666666666
+1,ds003626,1,LR-HORNet,8,ds003626,27.0
+1,ds003626,1,LR-HORNet,9,ds003626,30.0
+1,ds003626,1,LR-HORNet,10,ds003626,37.5
+1,ds003626,2,EEGNet,1,ds003626,25.0
+1,ds003626,2,EEGNet,2,ds003626,27.500000000000004
+1,ds003626,2,EEGNet,3,ds003626,24.44444444444444
+1,ds003626,2,EEGNet,4,ds003626,27.500000000000004
+1,ds003626,2,EEGNet,5,ds003626,29.166666666666668
+1,ds003626,2,EEGNet,6,ds003626,31.48148148148148
+1,ds003626,2,EEGNet,7,ds003626,36.66666666666666
+1,ds003626,2,EEGNet,8,ds003626,31.0
+1,ds003626,2,EEGNet,9,ds003626,22.5
+1,ds003626,2,EEGNet,10,ds003626,25.0
+1,ds003626,3,ATCNet,1,ds003626,32.0
+1,ds003626,3,ATCNet,2,ds003626,23.333333333333332
+1,ds003626,3,ATCNet,3,ds003626,27.77777777777778
+1,ds003626,3,ATCNet,4,ds003626,32.5
+1,ds003626,3,ATCNet,5,ds003626,30.83333333333333
+1,ds003626,3,ATCNet,6,ds003626,31.48148148148148
+1,ds003626,3,ATCNet,7,ds003626,31.66666666666666
+1,ds003626,3,ATCNet,8,ds003626,28.000000000000004
+1,ds003626,3,ATCNet,9,ds003626,21.66666666666666
+1,ds003626,3,ATCNet,10,ds003626,21.66666666666666
+1,ds003626,4,EEGMamba,1,ds003626,28.999999999999996
+1,ds003626,4,EEGMamba,2,ds003626,26.66666666666666
+1,ds003626,4,EEGMamba,3,ds003626,24.44444444444444
+1,ds003626,4,EEGMamba,4,ds003626,29.166666666666668
+1,ds003626,4,EEGMamba,5,ds003626,35.0
+1,ds003626,4,EEGMamba,6,ds003626,17.59259259259259
+1,ds003626,4,EEGMamba,7,ds003626,21.66666666666666
+1,ds003626,4,EEGMamba,8,ds003626,26.0
+1,ds003626,4,EEGMamba,9,ds003626,21.66666666666666
+1,ds003626,4,EEGMamba,10,ds003626,26.66666666666666
+1,ds003626,5,FAST,1,ds003626,28.000000000000004
+1,ds003626,5,FAST,2,ds003626,29.166666666666668
+1,ds003626,5,FAST,3,ds003626,16.66666666666666
+1,ds003626,5,FAST,4,ds003626,25.83333333333333
+1,ds003626,5,FAST,5,ds003626,25.83333333333333
+1,ds003626,5,FAST,6,ds003626,23.148148148148138
+1,ds003626,5,FAST,7,ds003626,25.83333333333333
+1,ds003626,5,FAST,8,ds003626,28.000000000000004
+1,ds003626,5,FAST,9,ds003626,23.333333333333332
+1,ds003626,5,FAST,10,ds003626,30.0
+1,ds003626,6,LaBraM,1,ds003626,25.0
+1,ds003626,6,LaBraM,2,ds003626,26.66666666666666
+1,ds003626,6,LaBraM,3,ds003626,20.0
+1,ds003626,6,LaBraM,4,ds003626,25.83333333333333
+1,ds003626,6,LaBraM,5,ds003626,22.5
+1,ds003626,6,LaBraM,6,ds003626,26.851851851851848
+1,ds003626,6,LaBraM,7,ds003626,25.83333333333333
+1,ds003626,6,LaBraM,8,ds003626,22.0
+1,ds003626,6,LaBraM,9,ds003626,21.66666666666666
+1,ds003626,6,LaBraM,10,ds003626,25.0
+2,directional_words_russian,1,LR-HORNet,1,Directional Words-Russian,27.083333333333332
+2,directional_words_russian,1,LR-HORNet,2,Directional Words-Russian,23.3201581027668
+2,directional_words_russian,1,LR-HORNet,3,Directional Words-Russian,27.083333333333332
+2,directional_words_russian,1,LR-HORNet,4,Directional Words-Russian,45.65217391304347
+2,directional_words_russian,1,LR-HORNet,5,Directional Words-Russian,25.33333333333333
+2,directional_words_russian,1,LR-HORNet,6,Directional Words-Russian,35.61643835616438
+2,directional_words_russian,1,LR-HORNet,7,Directional Words-Russian,67.04119850187266
+2,directional_words_russian,1,LR-HORNet,8,Directional Words-Russian,27.27272727272727
+2,directional_words_russian,1,LR-HORNet,9,Directional Words-Russian,40.145985401459846
+2,directional_words_russian,1,LR-HORNet,10,Directional Words-Russian,28.47222222222222
+2,directional_words_russian,1,LR-HORNet,11,Directional Words-Russian,21.53846153846154
+2,directional_words_russian,1,LR-HORNet,12,Directional Words-Russian,23.07692307692307
+2,directional_words_russian,2,EEGNet,1,Directional Words-Russian,19.44444444444444
+2,directional_words_russian,2,EEGNet,2,Directional Words-Russian,15.81027667984189
+2,directional_words_russian,2,EEGNet,3,Directional Words-Russian,20.13888888888889
+2,directional_words_russian,2,EEGNet,4,Directional Words-Russian,46.95652173913043
+2,directional_words_russian,2,EEGNet,5,Directional Words-Russian,20.0
+2,directional_words_russian,2,EEGNet,6,Directional Words-Russian,28.767123287671232
+2,directional_words_russian,2,EEGNet,7,Directional Words-Russian,43.07116104868914
+2,directional_words_russian,2,EEGNet,8,Directional Words-Russian,22.54545454545454
+2,directional_words_russian,2,EEGNet,9,Directional Words-Russian,40.145985401459846
+2,directional_words_russian,2,EEGNet,10,Directional Words-Russian,28.47222222222222
+2,directional_words_russian,2,EEGNet,11,Directional Words-Russian,17.69230769230769
+2,directional_words_russian,2,EEGNet,12,Directional Words-Russian,20.87912087912088
+2,directional_words_russian,3,ATCNet,1,Directional Words-Russian,25.694444444444443
+2,directional_words_russian,3,ATCNet,2,Directional Words-Russian,15.0197628458498
+2,directional_words_russian,3,ATCNet,3,Directional Words-Russian,22.91666666666666
+2,directional_words_russian,3,ATCNet,4,Directional Words-Russian,23.04347826086956
+2,directional_words_russian,3,ATCNet,5,Directional Words-Russian,20.0
+2,directional_words_russian,3,ATCNet,6,Directional Words-Russian,21.91780821917808
+2,directional_words_russian,3,ATCNet,7,Directional Words-Russian,63.670411985018724
+2,directional_words_russian,3,ATCNet,8,Directional Words-Russian,20.72727272727272
+2,directional_words_russian,3,ATCNet,9,Directional Words-Russian,36.4963503649635
+2,directional_words_russian,3,ATCNet,10,Directional Words-Russian,11.80555555555555
+2,directional_words_russian,3,ATCNet,11,Directional Words-Russian,18.46153846153846
+2,directional_words_russian,3,ATCNet,12,Directional Words-Russian,10.98901098901098
+2,directional_words_russian,4,EEGMamba,1,Directional Words-Russian,18.05555555555555
+2,directional_words_russian,4,EEGMamba,2,Directional Words-Russian,16.996047430830032
+2,directional_words_russian,4,EEGMamba,3,Directional Words-Russian,22.22222222222222
+2,directional_words_russian,4,EEGMamba,4,Directional Words-Russian,82.17391304347827
+2,directional_words_russian,4,EEGMamba,5,Directional Words-Russian,14.66666666666666
+2,directional_words_russian,4,EEGMamba,6,Directional Words-Russian,19.17808219178082
+2,directional_words_russian,4,EEGMamba,7,Directional Words-Russian,60.67415730337079
+2,directional_words_russian,4,EEGMamba,8,Directional Words-Russian,19.27272727272727
+2,directional_words_russian,4,EEGMamba,9,Directional Words-Russian,35.036496350364956
+2,directional_words_russian,4,EEGMamba,10,Directional Words-Russian,18.05555555555555
+2,directional_words_russian,4,EEGMamba,11,Directional Words-Russian,21.15384615384615
+2,directional_words_russian,4,EEGMamba,12,Directional Words-Russian,19.78021978021978
+2,directional_words_russian,5,FAST,1,Directional Words-Russian,47.22222222222222
+2,directional_words_russian,5,FAST,2,Directional Words-Russian,60.47430830039525
+2,directional_words_russian,5,FAST,3,Directional Words-Russian,47.91666666666667
+2,directional_words_russian,5,FAST,4,Directional Words-Russian,98.69565217391305
+2,directional_words_russian,5,FAST,5,Directional Words-Russian,14.66666666666666
+2,directional_words_russian,5,FAST,6,Directional Words-Russian,60.273972602739725
+2,directional_words_russian,5,FAST,7,Directional Words-Russian,94.00749063670412
+2,directional_words_russian,5,FAST,8,Directional Words-Russian,24.0
+2,directional_words_russian,5,FAST,9,Directional Words-Russian,79.56204379562044
+2,directional_words_russian,5,FAST,10,Directional Words-Russian,41.66666666666667
+2,directional_words_russian,5,FAST,11,Directional Words-Russian,28.84615384615384
+2,directional_words_russian,5,FAST,12,Directional Words-Russian,42.85714285714285
+2,directional_words_russian,6,LaBraM,1,Directional Words-Russian,29.86111111111111
+2,directional_words_russian,6,LaBraM,2,Directional Words-Russian,19.76284584980237
+2,directional_words_russian,6,LaBraM,3,Directional Words-Russian,20.13888888888889
+2,directional_words_russian,6,LaBraM,4,Directional Words-Russian,97.82608695652173
+2,directional_words_russian,6,LaBraM,5,Directional Words-Russian,22.0
+2,directional_words_russian,6,LaBraM,6,Directional Words-Russian,17.80821917808219
+2,directional_words_russian,6,LaBraM,7,Directional Words-Russian,71.16104868913857
+2,directional_words_russian,6,LaBraM,8,Directional Words-Russian,26.54545454545454
+2,directional_words_russian,6,LaBraM,9,Directional Words-Russian,42.700729927007295
+2,directional_words_russian,6,LaBraM,10,Directional Words-Russian,27.083333333333332
+2,directional_words_russian,6,LaBraM,11,Directional Words-Russian,26.53846153846154
+2,directional_words_russian,6,LaBraM,12,Directional Words-Russian,19.78021978021978
+3,directional_words_spanish,1,LR-HORNet,1,Directional Words-Spanish,42.71685761047463
+3,directional_words_spanish,1,LR-HORNet,2,Directional Words-Spanish,56.43044619422572
+3,directional_words_spanish,1,LR-HORNet,3,Directional Words-Spanish,33.46080305927342
+3,directional_words_spanish,1,LR-HORNet,4,Directional Words-Spanish,30.20408163265306
+3,directional_words_spanish,1,LR-HORNet,5,Directional Words-Spanish,47.90874524714829
+3,directional_words_spanish,1,LR-HORNet,6,Directional Words-Spanish,35.18930957683742
+3,directional_words_spanish,1,LR-HORNet,7,Directional Words-Spanish,46.71916010498688
+3,directional_words_spanish,1,LR-HORNet,8,Directional Words-Spanish,31.39841688654353
+3,directional_words_spanish,1,LR-HORNet,9,Directional Words-Spanish,29.13165266106443
+3,directional_words_spanish,1,LR-HORNet,10,Directional Words-Spanish,27.874564459930312
+3,directional_words_spanish,2,EEGNet,1,Directional Words-Spanish,41.89852700490998
+3,directional_words_spanish,2,EEGNet,2,Directional Words-Spanish,53.018372703412076
+3,directional_words_spanish,2,EEGNet,3,Directional Words-Spanish,24.8565965583174
+3,directional_words_spanish,2,EEGNet,4,Directional Words-Spanish,31.83673469387755
+3,directional_words_spanish,2,EEGNet,5,Directional Words-Spanish,43.34600760456273
+3,directional_words_spanish,2,EEGNet,6,Directional Words-Spanish,34.74387527839643
+3,directional_words_spanish,2,EEGNet,7,Directional Words-Spanish,44.09448818897638
+3,directional_words_spanish,2,EEGNet,8,Directional Words-Spanish,35.092348284960416
+3,directional_words_spanish,2,EEGNet,9,Directional Words-Spanish,24.64985994397759
+3,directional_words_spanish,2,EEGNet,10,Directional Words-Spanish,19.16376306620209
+3,directional_words_spanish,3,ATCNet,1,Directional Words-Spanish,32.24222585924713
+3,directional_words_spanish,3,ATCNet,2,Directional Words-Spanish,49.34383202099737
+3,directional_words_spanish,3,ATCNet,3,Directional Words-Spanish,47.41873804971319
+3,directional_words_spanish,3,ATCNet,4,Directional Words-Spanish,16.32653061224489
+3,directional_words_spanish,3,ATCNet,5,Directional Words-Spanish,41.44486692015209
+3,directional_words_spanish,3,ATCNet,6,Directional Words-Spanish,30.06681514476614
+3,directional_words_spanish,3,ATCNet,7,Directional Words-Spanish,41.73228346456692
+3,directional_words_spanish,3,ATCNet,8,Directional Words-Spanish,32.98153034300791
+3,directional_words_spanish,3,ATCNet,9,Directional Words-Spanish,22.689075630252102
+3,directional_words_spanish,3,ATCNet,10,Directional Words-Spanish,18.1184668989547
+3,directional_words_spanish,4,EEGMamba,1,Directional Words-Spanish,21.27659574468085
+3,directional_words_spanish,4,EEGMamba,2,Directional Words-Spanish,22.04724409448819
+3,directional_words_spanish,4,EEGMamba,3,Directional Words-Spanish,19.311663479923517
+3,directional_words_spanish,4,EEGMamba,4,Directional Words-Spanish,22.04081632653061
+3,directional_words_spanish,4,EEGMamba,5,Directional Words-Spanish,15.96958174904943
+3,directional_words_spanish,4,EEGMamba,6,Directional Words-Spanish,21.826280623608017
+3,directional_words_spanish,4,EEGMamba,7,Directional Words-Spanish,17.06036745406824
+3,directional_words_spanish,4,EEGMamba,8,Directional Words-Spanish,21.10817941952506
+3,directional_words_spanish,4,EEGMamba,9,Directional Words-Spanish,23.24929971988795
+3,directional_words_spanish,4,EEGMamba,10,Directional Words-Spanish,17.07317073170731
+3,directional_words_spanish,5,FAST,1,Directional Words-Spanish,55.319148936170215
+3,directional_words_spanish,5,FAST,2,Directional Words-Spanish,79.52755905511812
+3,directional_words_spanish,5,FAST,3,Directional Words-Spanish,65.20076481835564
+3,directional_words_spanish,5,FAST,4,Directional Words-Spanish,64.08163265306122
+3,directional_words_spanish,5,FAST,5,Directional Words-Spanish,53.61216730038023
+3,directional_words_spanish,5,FAST,6,Directional Words-Spanish,61.02449888641426
+3,directional_words_spanish,5,FAST,7,Directional Words-Spanish,80.5774278215223
+3,directional_words_spanish,5,FAST,8,Directional Words-Spanish,55.93667546174142
+3,directional_words_spanish,5,FAST,9,Directional Words-Spanish,58.26330532212886
+3,directional_words_spanish,5,FAST,10,Directional Words-Spanish,57.8397212543554
+3,directional_words_spanish,6,LaBraM,1,Directional Words-Spanish,33.38788870703764
+3,directional_words_spanish,6,LaBraM,2,Directional Words-Spanish,38.32020997375328
+3,directional_words_spanish,6,LaBraM,3,Directional Words-Spanish,35.75525812619503
+3,directional_words_spanish,6,LaBraM,4,Directional Words-Spanish,24.08163265306122
+3,directional_words_spanish,6,LaBraM,5,Directional Words-Spanish,28.89733840304182
+3,directional_words_spanish,6,LaBraM,6,Directional Words-Spanish,26.50334075723831
+3,directional_words_spanish,6,LaBraM,7,Directional Words-Spanish,48.818897637795274
+3,directional_words_spanish,6,LaBraM,8,Directional Words-Spanish,55.93667546174142
+3,directional_words_spanish,6,LaBraM,9,Directional Words-Spanish,40.056022408963585
+3,directional_words_spanish,6,LaBraM,10,Directional Words-Spanish,40.41811846689895
+4,bimodal_inner_speech,1,LR-HORNet,1,Bimodal,26.25
+4,bimodal_inner_speech,1,LR-HORNet,2,Bimodal,18.75
+4,bimodal_inner_speech,1,LR-HORNet,3,Bimodal,19.375
+4,bimodal_inner_speech,1,LR-HORNet,4,Bimodal,22.36024844720497
+4,bimodal_inner_speech,2,EEGNet,1,Bimodal,24.375
+4,bimodal_inner_speech,2,EEGNet,2,Bimodal,13.750000000000002
+4,bimodal_inner_speech,2,EEGNet,3,Bimodal,15.0
+4,bimodal_inner_speech,2,EEGNet,4,Bimodal,18.01242236024844
+4,bimodal_inner_speech,3,ATCNet,1,Bimodal,21.25
+4,bimodal_inner_speech,3,ATCNet,2,Bimodal,17.5
+4,bimodal_inner_speech,3,ATCNet,3,Bimodal,11.25
+4,bimodal_inner_speech,3,ATCNet,4,Bimodal,17.391304347826082
+4,bimodal_inner_speech,4,EEGMamba,1,Bimodal,15.0
+4,bimodal_inner_speech,4,EEGMamba,2,Bimodal,15.625
+4,bimodal_inner_speech,4,EEGMamba,3,Bimodal,17.5
+4,bimodal_inner_speech,4,EEGMamba,4,Bimodal,14.28571428571428
+4,bimodal_inner_speech,5,FAST,1,Bimodal,15.625
+4,bimodal_inner_speech,5,FAST,2,Bimodal,15.625
+4,bimodal_inner_speech,5,FAST,3,Bimodal,13.750000000000002
+4,bimodal_inner_speech,5,FAST,4,Bimodal,13.04347826086956
+4,bimodal_inner_speech,6,LaBraM,1,Bimodal,18.75
+4,bimodal_inner_speech,6,LaBraM,2,Bimodal,15.0
+4,bimodal_inner_speech,6,LaBraM,3,Bimodal,10.0
+4,bimodal_inner_speech,6,LaBraM,4,Bimodal,19.875776397515523

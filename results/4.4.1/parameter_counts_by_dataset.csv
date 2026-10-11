@@ -1,0 +1,25 @@
+﻿dataset_order,dataset_key,dataset,model_order,model,total_parameters,trainable_parameters,non_trainable_parameters,parameters_k,parameters_m,folds_checked,consistent_across_folds,source_method
+1,ds003626,ds003626,1,LR-HORNet,6726,6726,0,6.726,0.006726,10,True,best_model.pt state_dict
+1,ds003626,ds003626,2,EEGNet,5460,5460,0,5.46,0.00546,10,True,best_model.pt state_dict
+1,ds003626,ds003626,3,ATCNet,117124,117124,0,117.124,0.117124,10,True,best_model.pt state_dict
+1,ds003626,ds003626,4,EEGMamba,3278047,3277847,200,3278.047,3.278047,10,True,test_metrics.json metadata
+1,ds003626,ds003626,5,FAST,257380,257380,0,257.38,0.25738,10,True,test_metrics.json metadata
+1,ds003626,ds003626,6,LaBraM,5820740,5820740,0,5820.74,5.82074,10,True,test_metrics.json metadata
+2,directional_words_russian,Directional Words–Russian,1,LR-HORNet,3592,3592,0,3.592,0.003592,12,True,best_model.pt state_dict
+2,directional_words_russian,Directional Words–Russian,2,EEGNet,2326,2326,0,2.326,0.002326,12,True,best_model.pt state_dict
+2,directional_words_russian,Directional Words–Russian,3,ATCNet,29724,29724,0,29.724,0.029724,12,True,best_model.pt state_dict
+2,directional_words_russian,Directional Words–Russian,4,EEGMamba,3278449,3278249,200,3278.449,3.278449,12,True,test_metrics.json metadata
+2,directional_words_russian,Directional Words–Russian,5,FAST,160966,160966,0,160.966,0.160966,12,True,test_metrics.json metadata
+2,directional_words_russian,Directional Words–Russian,6,LaBraM,5821142,5821142,0,5821.142,5.821142,12,True,test_metrics.json metadata
+3,directional_words_spanish,Directional Words–Spanish,1,LR-HORNet,5192,5192,0,5.192,0.005192,10,True,best_model.pt state_dict
+3,directional_words_spanish,Directional Words–Spanish,2,EEGNet,3926,3926,0,3.926,0.003926,10,True,best_model.pt state_dict
+3,directional_words_spanish,Directional Words–Spanish,3,ATCNet,114574,114574,0,114.574,0.114574,10,True,best_model.pt state_dict
+3,directional_words_spanish,Directional Words–Spanish,4,EEGMamba,3278449,3278249,200,3278.449,3.278449,10,True,test_metrics.json metadata
+3,directional_words_spanish,Directional Words–Spanish,5,FAST,165094,165094,0,165.094,0.165094,10,True,test_metrics.json metadata
+3,directional_words_spanish,Directional Words–Spanish,6,LaBraM,5821142,5821142,0,5821.142,5.821142,10,True,test_metrics.json metadata
+4,bimodal_inner_speech,Bimodal Inner Speech,1,LR-HORNet,4938,4938,0,4.938,0.004938,4,True,best_model.pt state_dict
+4,bimodal_inner_speech,Bimodal Inner Speech,2,EEGNet,3544,3544,0,3.544,0.003544,4,True,best_model.pt state_dict
+4,bimodal_inner_speech,Bimodal Inner Speech,3,ATCNet,34080,34080,0,34.08,0.03408,4,True,best_model.pt state_dict
+4,bimodal_inner_speech,Bimodal Inner Speech,4,EEGMamba,3278851,3278651,200,3278.851,3.278851,4,True,test_metrics.json metadata
+4,bimodal_inner_speech,Bimodal Inner Speech,5,FAST,191784,191784,0,191.784,0.191784,4,True,test_metrics.json metadata
+4,bimodal_inner_speech,Bimodal Inner Speech,6,LaBraM,5821544,5821544,0,5821.544,5.821544,4,True,test_metrics.json metadata

@@ -1,0 +1,4 @@
+﻿left_model,right_model,paired_folds,accuracy_mean_delta,accuracy_wins,accuracy_ties,accuracy_losses,balanced_accuracy_mean_delta,balanced_accuracy_wins,balanced_accuracy_ties,balanced_accuracy_losses,macro_f1_mean_delta,macro_f1_wins,macro_f1_ties,macro_f1_losses
+group4_patchLstm_deformableLstm,group4_patchLstm_pointwiseDeformation,9,0.003518518518518526,3,5,1,0.003518518518518507,3,4,2,0.006632160708028233,5,0,4
+group4_patchLstm_deformableLstm,group4_patchLstm_staticDeformation,9,0.009670781893004124,7,1,1,0.009698840254395812,7,1,1,0.0030239300862793927,7,0,2
+group4_patchLstm_deformableLstm,group4_patchLstm_groupedConvDeformation,9,0.014794238683127578,7,1,1,0.014766180321735878,7,1,1,0.009579551994976673,6,0,3

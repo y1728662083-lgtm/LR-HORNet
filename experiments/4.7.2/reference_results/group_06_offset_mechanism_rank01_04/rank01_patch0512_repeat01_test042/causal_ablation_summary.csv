@@ -1,0 +1,5 @@
+mode,mode_label,n_trials,accuracy,balanced_accuracy,macro_f1,accuracy_delta_vs_learned,paired_bootstrap_ci95_low,paired_bootstrap_ci95_high,mean_signed_applied_offset_samples,mean_abs_applied_offset_samples,applied_offset_std_samples,confusion_matrix_json
+learned,Learned offset,100,0.42,0.42,0.4207875103619784,0.0,0.0,0.0,-0.20793069899082184,0.2079349160194397,0.08877052366733551,"[[6, 9, 5, 5], [0, 13, 6, 6], [1, 12, 12, 0], [1, 11, 2, 11]]"
+zero,Zero offset,100,0.42,0.42,0.4207875103619784,0.0,0.0,0.0,0.0,0.0,0.0,"[[6, 9, 5, 5], [0, 13, 6, 6], [1, 12, 12, 0], [1, 11, 2, 11]]"
+shuffled,Trial-shuffled offset,100,0.42,0.42,0.4207875103619784,0.0,0.0,0.0,-0.20793068408966064,0.2079349160194397,0.08877052366733551,"[[6, 9, 5, 5], [0, 13, 6, 6], [1, 12, 12, 0], [1, 11, 2, 11]]"
+random_matched,Phase-randomized matched offset,100,0.42,0.42,0.4207875103619784,0.0,0.0,0.0,-0.20793065428733826,0.20921997725963593,0.08877053111791611,"[[6, 9, 5, 5], [0, 13, 6, 6], [1, 12, 12, 0], [1, 11, 2, 11]]"

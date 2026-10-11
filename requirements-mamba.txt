@@ -1,0 +1,4 @@
+# Install only for the Section 4.8.2 Mamba ablations.
+# Select releases compatible with the local PyTorch/CUDA ABI.
+mamba-ssm
+causal-conv1d

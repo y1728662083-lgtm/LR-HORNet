@@ -1,0 +1,3 @@
+﻿model,n,accuracy_mean,accuracy_sd,balanced_accuracy_mean,macro_f1_mean
+group4_fullMamba_deformableLstm,5,0.35,0.0,0.35,0.33346195877610246
+group4_patchLstm_deformableMamba,5,0.35,0.0,0.35,0.3504765202323471

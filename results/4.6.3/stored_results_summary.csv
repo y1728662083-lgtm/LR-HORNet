@@ -1,0 +1,6 @@
+﻿electrode_groups,model,fold,requested_repeats,completed_repeats,status,accuracy_mean,accuracy_sd,balanced_accuracy_mean,macro_f1_mean
+1,group1_patchLstm_deformableLstm,1,5,0,incomplete,,,,
+2,group2_patchLstm_deformableLstm,1,5,0,incomplete,,,,
+4,group4_patchLstm_deformableLstm,1,5,5,complete,0.344,0.005477225575051635,0.344,0.3417865568103979
+8,group8_patchLstm_deformableLstm,1,5,5,complete,0.346,0.005477225575051635,0.346,0.30158524244415186
+16,group16_patchLstm_deformableLstm,1,5,5,complete,0.264,0.01140175425099139,0.264,0.26535622502508505

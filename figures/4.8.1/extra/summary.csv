@@ -1,0 +1,2 @@
+﻿model,n_folds,test_accuracy_mean,test_accuracy_sd,test_accuracy_sem,test_accuracy_min,test_accuracy_max,validation_accuracy_mean,validation_accuracy_sd,validation_accuracy_sem,validation_accuracy_min,validation_accuracy_max,macro_f1_mean
+group4_patchLstm_deformableCfC,10,0.31299999999999994,0.043074726914577546,0.013621424663982218,0.25,0.36666666666666664,0.3675925925925926,0.04333306953597027,0.013703119774012174,0.3148148148148148,0.4333333333333333,0.29453210985342

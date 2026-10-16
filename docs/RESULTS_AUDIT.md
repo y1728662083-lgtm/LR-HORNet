@@ -4,7 +4,15 @@ This file records known constraints in the archived experiment outputs. It is pa
 
 ## Main cross-dataset comparison (4.4.1)
 
-The four LR-HORNet summaries are complete for their expected held-out-subject folds: 10 ds003626, 4 Bimodal Inner Speech, 12 Directional Words–Russian, and 10 Directional Words–Spanish folds. Patch and stride are time-normalized to approximately 0.5 s and 0.25 s, so their sample counts differ by dataset.
+The original four LR-HORNet summaries are complete for their expected held-out-subject folds: 10 ds003626, 4 Bimodal Inner Speech, 12 Directional Words–Russian, and 10 Directional Words–Spanish folds. Patch and stride are time-normalized to approximately 0.5 s and 0.25 s, so their sample counts differ by dataset. BCI2020 is the fifth dataset and is documented separately below because its archived LR-HORNet evidence contains repeated fits rather than one selected result per fold.
+
+### BCI2020 evidence boundary
+
+BCI2020 is a five-class dataset with 64 × 795 inputs sampled at 256 Hz. The configuration uses a 128-sample Patch and 64-sample stride; the incomplete final Patch is completed by 37 samples of right padding. Evaluation follows the same calibrated LOSO rule over 15 held-out-subject folds.
+
+Each of the five comparison baselines has all 15 folds complete. The LR-HORNet paper result is the fold-balanced summary of fixed-seed repeats 1–9: nine completed fits for each of 15 folds, or 135 fits in total. Repeat 10 is excluded in full. Its folds 1–9 are complete; folds 10–13 contain checkpoints and training logs but no completed test-stage results; folds 14–15 are absent. The result must therefore not be described as a complete ten-repeat experiment, and no checkpoint is selected by test accuracy.
+
+The local BCI2020 result tree contains 223 checkpoints, none of which is committed to Git. Four lightweight evidence files are distributed under `results/4.4.1/bci2020/`: the five-baseline model summary and the LR-HORNet overall, fold-level, and prose summaries. The repository's strict smoke script accepts the external result tree, restores every discovered checkpoint with `strict=True`, and executes a synthetic 64 × 795 forward pass.
 
 ## Validation and ablation studies
 

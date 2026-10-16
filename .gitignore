@@ -17,9 +17,10 @@ venv/
 Thumbs.db
 
 # Local data and generated training artifacts
-data/
-derivatives/
-outputs/
+/data/
+/derivatives/
+/outputs/
+addition/bci2020_suite/runtime_configs/
 checkpoints/*
 !checkpoints/main/
 !checkpoints/main/**

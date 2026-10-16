@@ -6,6 +6,7 @@ from __future__ import annotations
 import ast
 import csv
 import hashlib
+import json
 import math
 import re
 import tokenize
@@ -31,6 +32,32 @@ MACHINE_PATH_MARKERS = (
     "C:" + "\\Users\\86159",
     "/root/" + "autodl-tmp",
 )
+BCI2020_ARCHIVED_CONFIG_SHA256 = {
+    "configs/main/bci2020.yaml": (
+        "8e1b695a3a0c10a848b73db3b9c38673f7985e087c29c6dec737093d1e9c75a9"
+    ),
+    "baselines/eegnet/configs/bci2020.yaml": (
+        "9501b8c1a59c857c49a244f248b95c11a6f3ed6c97435bcd618ddb103f79dd5f"
+    ),
+    "baselines/atcnet/configs/bci2020.yaml": (
+        "7c3b708210b7d76f02794b91a964ed5463faadf67f01a713e5e5f20a0806c062"
+    ),
+    "baselines/eegmamba/addition/configs/bci2020_official_baselines.yaml": (
+        "f7e96d24d8e0c41c778c4d9cdfcd9ca3f6e23e6d10dc8ea04835637ce8594b4f"
+    ),
+    "baselines/fast/addition/configs/fast_native_bci2020.yaml": (
+        "2b46d308cd395e3e5ad0afcff3e411f9aa783d75051558b171d272968f87a76c"
+    ),
+    "baselines/labram/addition/configs/bci2020_official_baselines.yaml": (
+        "dcf30d612be7fbaf454f9d87e19fb7f176f0bf1f454787101a0e14456819edf7"
+    ),
+    "addition/bci2020_preprocessing/configs/bci2020_standard.yaml": (
+        "62544f03aa8da0d5fc967ffd913b97ad425e1d87f53d51d29fe365b9f4fbc19b"
+    ),
+}
+BCI2020_ARCHIVED_PATH_SOURCES = set(BCI2020_ARCHIVED_CONFIG_SHA256) | {
+    "addition/bci2020_suite/preflight_all_models.py",
+}
 
 
 def validate_configs() -> None:
@@ -54,7 +81,9 @@ def validate_configs() -> None:
         if isinstance(data, dict) and isinstance(data.get("root"), str):
             value = data["root"]
             if value.startswith("/") or WINDOWS_ABSOLUTE.match(value):
-                raise ValueError(f"Absolute data.root in {path}: {value}")
+                relative = path.relative_to(ROOT).as_posix()
+                if relative not in BCI2020_ARCHIVED_CONFIG_SHA256:
+                    raise ValueError(f"Absolute data.root in {path}: {value}")
 
 
 def validate_files() -> None:
@@ -87,8 +116,18 @@ def validate_portable_text_paths() -> None:
     for path in ROOT.rglob("*"):
         if not path.is_file() or path.suffix.lower() not in text_suffixes:
             continue
+        relative_path = path.relative_to(ROOT)
+        if relative_path.is_relative_to(
+            Path("addition") / "bci2020_suite" / "runtime_configs"
+        ):
+            continue
         text = path.read_text(encoding="utf-8-sig", errors="replace")
-        if any(marker in text for marker in MACHINE_PATH_MARKERS):
+        relative = relative_path.as_posix()
+        matched = [marker for marker in MACHINE_PATH_MARKERS if marker in text]
+        if matched and not (
+            relative in BCI2020_ARCHIVED_PATH_SOURCES
+            and matched == ["/root/" + "autodl-tmp"]
+        ):
             offenders.append(path.relative_to(ROOT))
     if offenders:
         raise ValueError(f"Machine-specific paths remain in: {offenders}")
@@ -127,8 +166,18 @@ def validate_root_manifest() -> None:
     for line in manifest_path.read_text(encoding="utf-8").splitlines():
         digest, relative = line.split("  ", 1)
         expected[relative] = digest
-    excluded_anywhere = {".git", ".venv", "__pycache__"}
-    excluded_top_level = {"outputs", "data"}
+    excluded_anywhere = {
+        ".git",
+        ".venv",
+        ".pytest_cache",
+        ".mypy_cache",
+        ".ruff_cache",
+        "__pycache__",
+    }
+    excluded_top_level = {"outputs", "data", "derivatives", "logs"}
+    excluded_relative_roots = {
+        Path("addition") / "bci2020_suite" / "runtime_configs",
+    }
     paths = sorted(
         path
         for path in ROOT.rglob("*")
@@ -139,6 +188,10 @@ def validate_root_manifest() -> None:
             for part in path.relative_to(ROOT).parts
         )
         and path.relative_to(ROOT).parts[0] not in excluded_top_level
+        and not any(
+            path.relative_to(ROOT).is_relative_to(root)
+            for root in excluded_relative_roots
+        )
     )
     observed = {
         path.relative_to(ROOT).as_posix(): sha256_file(path)
@@ -170,6 +223,69 @@ def sha256_file(path: Path) -> str:
         for block in iter(lambda: handle.read(1024 * 1024), b""):
             digest.update(block)
     return digest.hexdigest()
+
+
+def validate_bci2020_archived_configs() -> None:
+    """Keep the uploaded BCI2020 source configs byte-identical to the runs."""
+    for relative, expected in BCI2020_ARCHIVED_CONFIG_SHA256.items():
+        path = ROOT / relative
+        if not path.is_file():
+            raise FileNotFoundError(f"Missing archived BCI2020 config: {relative}")
+        observed = sha256_file(path)
+        if observed != expected:
+            raise ValueError(
+                f"BCI2020 source config drifted: {relative}: "
+                f"expected {expected}, observed {observed}"
+            )
+
+
+def validate_bci2020_results() -> None:
+    """Enforce the paper's complete-repeat BCI2020 aggregation contract."""
+    root = ROOT / "results" / "4.4.1" / "bci2020"
+    overall = json.loads(
+        (root / "overall_summary.json").read_text(encoding="utf-8")
+    )
+    expected_fields = {
+        "model": "lr_hornet",
+        "dataset": "bci2020",
+        "protocol": "calibrated_loso",
+        "fixed_seed": 42,
+        "included_repeats": list(range(1, 10)),
+        "folds": 15,
+        "repeats_per_fold": 9,
+        "runs_complete": 135,
+        "parameters_total": 5479,
+    }
+    observed_fields = {key: overall.get(key) for key in expected_fields}
+    if observed_fields != expected_fields:
+        raise ValueError(f"Unexpected BCI2020 LR-HORNet coverage: {observed_fields}")
+    if not math.isclose(
+        float(overall["test_accuracy_mean_across_fold_means"]),
+        0.21684700992371753,
+        abs_tol=1e-15,
+    ):
+        raise ValueError("Unexpected BCI2020 LR-HORNet test mean")
+
+    with (root / "summary_by_fold.csv").open(
+        newline="", encoding="utf-8-sig"
+    ) as stream:
+        fold_rows = list(csv.DictReader(stream))
+    if len(fold_rows) != 15:
+        raise ValueError(f"Unexpected BCI2020 fold count: {len(fold_rows)}")
+    if {int(row["fold"]) for row in fold_rows} != set(range(1, 16)):
+        raise ValueError("BCI2020 fold summary must cover folds 1–15 exactly")
+    if any(int(row["repeats_complete"]) != 9 for row in fold_rows):
+        raise ValueError("BCI2020 fold summary must use complete repeats 1–9 only")
+
+    with (root / "model_summary.csv").open(
+        newline="", encoding="utf-8-sig"
+    ) as stream:
+        baseline_rows = list(csv.DictReader(stream))
+    expected_models = {"eegnet", "atcnet", "eegmamba", "fast", "labram"}
+    if {row["model"] for row in baseline_rows} != expected_models:
+        raise ValueError("Unexpected BCI2020 baseline model coverage")
+    if any(int(row["folds_complete"]) != 15 for row in baseline_rows):
+        raise ValueError("Every BCI2020 baseline must contain all 15 folds")
 
 
 def validate_checkpoint_release() -> None:
@@ -385,6 +501,7 @@ def validate_patch_boundary_contract() -> None:
         "bimodal_inner_speech.yaml": True,
         "directional_words_russian.yaml": True,
         "directional_words_spanish.yaml": True,
+        "bci2020.yaml": True,
     }
     for filename, expected_value in expected.items():
         path = ROOT / "configs" / "main" / filename
@@ -400,8 +517,29 @@ def validate_patch_boundary_contract() -> None:
 def validate_required_paths() -> None:
     required = [
         ROOT / "main.py",
+        ROOT / "pytest.ini",
         ROOT / "src" / "eeg_pipeline" / "models" / "group4_patchLstm_deformableLstm.py",
         ROOT / "configs" / "main" / "ds003626.yaml",
+        ROOT / "configs" / "main" / "bci2020.yaml",
+        ROOT / "src" / "eeg_pipeline" / "data" / "bci2020.py",
+        ROOT / "addition" / "bci2020_suite" / "preflight_all_models.py",
+        ROOT / "addition" / "bci2020_suite" / "dispatch_all_models_4gpu.py",
+        ROOT / "addition" / "bci2020_preprocessing" / "preprocess_bci2020.py",
+        ROOT / "addition" / "bci2020_preprocessing" / "configs" / "bci2020_standard.yaml",
+        ROOT / "run_bci2020_all_models_4gpu.sh",
+        ROOT / "run_bci2020_lr_hornet_repeat10_4gpu.sh",
+        ROOT / "run_bci2020_other_models_then_lr_hornet_repeat10_4gpu.sh",
+        ROOT / "scripts" / "smoke_test_bci2020_checkpoints.py",
+        ROOT / "tests" / "test_bci2020_adapter.py",
+        ROOT / "tests" / "test_bci2020_model.py",
+        ROOT / "baselines" / "eegnet" / "configs" / "bci2020.yaml",
+        ROOT / "baselines" / "atcnet" / "configs" / "bci2020.yaml",
+        ROOT / "baselines" / "eegmamba" / "addition" / "configs" / "bci2020_official_baselines.yaml",
+        ROOT / "baselines" / "fast" / "addition" / "configs" / "fast_native_bci2020.yaml",
+        ROOT / "baselines" / "labram" / "addition" / "configs" / "bci2020_official_baselines.yaml",
+        ROOT / "baselines" / "eegmamba" / "src" / "eeg_pipeline" / "data" / "bci2020.py",
+        ROOT / "baselines" / "fast" / "src" / "eeg_pipeline" / "data" / "bci2020.py",
+        ROOT / "baselines" / "labram" / "src" / "eeg_pipeline" / "data" / "bci2020.py",
         ROOT / "docs" / "RESULTS_AUDIT.md",
         ROOT / "baselines" / "eegmamba" / "source_manifest.json",
         ROOT / "baselines" / "labram" / "source_manifest.json",
@@ -427,12 +565,14 @@ def validate_python_syntax() -> None:
 
 def main() -> None:
     validate_required_paths()
+    validate_bci2020_archived_configs()
     validate_configs()
     validate_files()
     validate_portable_text_paths()
     validate_baseline_manifests()
     validate_root_manifest()
     validate_main_results()
+    validate_bci2020_results()
     validate_checkpoint_release()
     validate_reconciled_results()
     validate_flop_boundary_counts()

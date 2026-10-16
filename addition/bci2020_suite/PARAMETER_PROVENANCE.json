@@ -1,0 +1,44 @@
+{
+  "reference_repository": ".",
+  "shared_protocol": {
+    "dataset": "bci2020",
+    "subjects": 15,
+    "sessions_per_subject": 3,
+    "classes": 5,
+    "folds": 15,
+    "split": "calibrated_loso",
+    "fits_per_model_per_fold": 1
+  },
+  "models": {
+    "lr_hornet": {
+      "source_config": "configs/main/ds003626.yaml",
+      "preserved": "architecture, optimizer, scheduler, seed, batch size and training limits",
+      "dataset_required_changes": "64 channels, 795 samples, 5 classes, 15 subjects; pad_incomplete_patch=true because 795 is not on the 128/64 patch grid"
+    },
+    "eegnet": {
+      "source_config": "baselines/eegnet/configs/ds003626.yaml",
+      "preserved": "official Braindecode default architecture and all training settings",
+      "dataset_required_changes": "64 channels, 795 samples, 256 Hz, 5 classes, 15 subjects"
+    },
+    "atcnet": {
+      "source_config": "baselines/atcnet/configs/ds003626.yaml",
+      "preserved": "official Braindecode default architecture and all training settings",
+      "dataset_required_changes": "64 channels, 795 samples, 256 Hz, 5 classes, 15 subjects"
+    },
+    "eegmamba": {
+      "source_config": "baselines/eegmamba/addition/configs/bimodal_inner_speech_official_baselines.yaml",
+      "preserved": "official source, pretrained checkpoint, classifier and complete fine-tuning configuration",
+      "dataset_required_changes": "source rate 256 Hz, 64-channel montage, 5 classes, 15 subjects"
+    },
+    "fast": {
+      "source_config": "baselines/fast/addition/configs/fast_native_ds003626.yaml",
+      "preserved": "official source, dim_token=32, full architecture and complete training configuration",
+      "dataset_required_changes": "64 channels, 795 samples, 5 classes, 15 subjects"
+    },
+    "labram": {
+      "source_config": "baselines/labram/addition/configs/bimodal_inner_speech_official_baselines.yaml",
+      "preserved": "official source, pretrained checkpoint and complete fine-tuning configuration",
+      "dataset_required_changes": "source rate 256 Hz, 64-channel montage, 5 classes, 15 subjects"
+    }
+  }
+}

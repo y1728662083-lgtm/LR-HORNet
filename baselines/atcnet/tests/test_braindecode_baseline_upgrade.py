@@ -62,7 +62,7 @@ def test_eegnet_builder_returns_the_unwrapped_official_class() -> None:
 
 
 def test_baseline_yaml_is_full_loso_and_requested_training_setup() -> None:
-    config_path = PROJECT_ROOT / "configs" / "braindecode_baselines.yaml"
+    config_path = PROJECT_ROOT / "configs" / "ds003626.yaml"
     with config_path.open(encoding="utf-8") as file:
         config = yaml.safe_load(file)
     assert config["split"]["fold_indices"] == list(range(10))

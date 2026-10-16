@@ -9,8 +9,18 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "MANIFEST.sha256"
-EXCLUDED_ANYWHERE = {".git", ".venv", "__pycache__"}
-EXCLUDED_TOP_LEVEL = {"outputs", "data"}
+EXCLUDED_ANYWHERE = {
+    ".git",
+    ".venv",
+    ".pytest_cache",
+    ".mypy_cache",
+    ".ruff_cache",
+    "__pycache__",
+}
+EXCLUDED_TOP_LEVEL = {"outputs", "data", "derivatives", "logs"}
+EXCLUDED_RELATIVE_ROOTS = {
+    Path("addition") / "bci2020_suite" / "runtime_configs",
+}
 
 
 def included(path: Path) -> bool:
@@ -20,6 +30,10 @@ def included(path: Path) -> bool:
         and path != OUTPUT
         and not any(part in EXCLUDED_ANYWHERE for part in relative.parts)
         and relative.parts[0] not in EXCLUDED_TOP_LEVEL
+        and not any(
+            relative.is_relative_to(root)
+            for root in EXCLUDED_RELATIVE_ROOTS
+        )
     )
 
 

@@ -66,15 +66,14 @@ def test_bimodal_official_preprocessing_source_is_bundled():
 
 
 def test_self_contained_payload_has_multidataset_runtime():
-    payload = ADDITION_ROOT / "fast_fullcheck_payload"
     required = (
-        payload / "addition" / "adapters.py",
-        payload / "addition" / "adapters_multidataset.py",
-        payload / "addition" / "run_official_baselines.py",
-        payload / "addition" / "official_sources" / "FAST" / "FAST.py",
-        payload / "src" / "eeg_pipeline" / "data" / "registry.py",
-        payload / "src" / "eeg_pipeline" / "data" / "directional_words.py",
-        payload / "src" / "eeg_pipeline" / "data" / "bimodal_inner_speech.py",
-        payload / "src" / "eeg_pipeline" / "data" / "preprocessing.py",
+        ADDITION_ROOT / "adapters.py",
+        ADDITION_ROOT / "adapters_multidataset.py",
+        ADDITION_ROOT / "run_official_baselines.py",
+        ADDITION_ROOT / "official_sources" / "FAST" / "FAST.py",
+        PAPER4_ROOT / "src" / "eeg_pipeline" / "data" / "registry.py",
+        PAPER4_ROOT / "src" / "eeg_pipeline" / "data" / "directional_words.py",
+        PAPER4_ROOT / "src" / "eeg_pipeline" / "data" / "bimodal_inner_speech.py",
+        PAPER4_ROOT / "src" / "eeg_pipeline" / "data" / "preprocessing.py",
     )
     assert all(path.is_file() for path in required)

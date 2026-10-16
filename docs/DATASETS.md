@@ -14,6 +14,7 @@ This is not identical to strict subject-independent LOSO. Any comparison must st
 | bimodal_inner_speech.yaml | 359 | 512 Hz | 256 samples (0.5 s) | 128 samples (0.25 s) | Zero-pad 25 samples | 4 | 5 per fold |
 | directional_words_russian.yaml | 250 | 250 Hz | 125 samples (0.5 s) | 63 samples (approximately 0.25 s) | Zero-pad 1 sample | 12 | 5 per fold |
 | directional_words_spanish.yaml | 750 | 500 Hz | 250 samples (0.5 s) | 125 samples (0.25 s) | Exact; no crop or padding | 10 | 5 per fold |
+| bci2020.yaml | 795 | 256 Hz | 128 samples (0.5 s) | 64 samples (0.25 s) | Zero-pad 37 samples | 15 | Baselines: 1 per fold; LR-HORNet: 9 per fold |
 
 LR uses only complete patches when `pad_incomplete_patch: false`, so an
 uncovered suffix is cropped. With `pad_incomplete_patch: true`, the patch count
@@ -23,12 +24,14 @@ the archived main experiments.
 
 The checked-in main YAML files execute one run for each listed fold. Repeated-run orchestration was performed outside main.py; repeated archives used the same configured seed (42), so their dispersion reflects residual training nondeterminism rather than independent seed sampling.
 
+BCI2020 has five classes and 64 channels. With a 795-sample input, a 128-sample Patch, and a 64-sample stride, the incomplete final Patch is right-padded by 37 samples to an effective covered length of 832 samples. Its calibrated LOSO protocol contains 15 held-out-subject folds. Each of the five comparison baselines has one complete result per fold. The LR-HORNet paper summary averages repeats 1–9 only (15 folds × 9 repeats = 135 completed fits); the incomplete tenth repeat is not part of the reported result.
+
 ## Acquisition-organization categories
 
 - **Randomized independent trials:** ds003626 and Bimodal Inner Speech. Different classes are interleaved along the recording timeline.
-- **Randomized class order with consecutive same-class trials:** BCI Competition 2020 Track 3. This dataset is discussed by the paper but is not part of the four completed main-result tables in this repository.
+- **Randomized class order with consecutive same-class trials:** BCI Competition 2020 Track 3 (BCI2020), included as the fifth cross-dataset evaluation through lightweight result evidence.
 - **Fixed repeated class blocks:** Directional Words–Russian and Directional Words–Spanish. Class, block position, relative acquisition time, fatigue, and slow drift may be coupled.
 
 ## Data distribution
 
-No raw EEG is included. Users are responsible for obtaining each dataset under its original terms. After download, edit only data.root if the suggested data/ layout is not used. Do not commit local paths, participant data, generated derivatives, or unselected training artifacts. The 36 validation-selected LR-HORNet checkpoints released with this repository are documented under `checkpoints/main/`.
+No raw EEG is included. Users are responsible for obtaining each dataset under its original terms. For the original four datasets, edit only `data.root` if the suggested `data/` layout is not used. For BCI2020, preserve the hash-locked archived YAML and pass the local root through `BCI2020_ROOT` or `--dataset-root`; the launcher writes an ignored runtime configuration. Do not commit local paths, participant data, generated derivatives, or unselected training artifacts. The 36 validation-selected LR-HORNet checkpoints released under `checkpoints/main/` cover the original four datasets. The 223 local BCI2020 checkpoints are intentionally excluded from Git; only their lightweight audited summaries are distributed under `results/4.4.1/bci2020/`.

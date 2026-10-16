@@ -25,6 +25,7 @@ from eeg_pipeline.data.splits import build_loso_subject_folds
 SUPPORTED_DATASETS = {
     "directional_words",
     "bimodal_inner_speech",
+    "bci2020",
 }
 
 # Reuse the split-manifest, resume and prediction implementation.

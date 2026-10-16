@@ -22,7 +22,12 @@ from fast_native_adapter import build_fast_native_model
 
 
 base.build_official_model = build_fast_native_model
-SUPPORTED_DATASETS = {"ds003626", "directional_words", "bimodal_inner_speech"}
+SUPPORTED_DATASETS = {
+    "ds003626",
+    "directional_words",
+    "bimodal_inner_speech",
+    "bci2020",
+}
 
 
 def load_config(path: Path) -> dict:

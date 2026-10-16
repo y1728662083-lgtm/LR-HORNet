@@ -1,0 +1,21 @@
+dataset:
+  root: /root/autodl-tmp/BCI_2020
+  subjects: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+  runs: [0, 1, 2]
+  expected_sfreq_hz: 256.0
+  expected_eeg_channels: 64
+
+preprocessing:
+  l_freq_hz: 0.5
+  h_freq_hz: 40.0
+  filter_order: 4
+  average_reference: true
+
+rejection:
+  # Conservative fixed MNE-style trial rejection. A trial is removed if any
+  # channel exceeds the maximum peak-to-peak threshold or is nearly flat.
+  max_peak_to_peak_uv: 500.0
+  min_peak_to_peak_uv: 0.5
+
+output:
+  root: /root/autodl-tmp/BCI_2020/derivatives/paper4/bci2020_standard

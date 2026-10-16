@@ -21,6 +21,21 @@ EXCLUDED_TOP_LEVEL = {"outputs", "data", "derivatives", "logs"}
 EXCLUDED_RELATIVE_ROOTS = {
     Path("addition") / "bci2020_suite" / "runtime_configs",
 }
+TEXT_SUFFIXES = {
+    ".bib",
+    ".csv",
+    ".ini",
+    ".json",
+    ".md",
+    ".py",
+    ".sh",
+    ".sha256",
+    ".svg",
+    ".txt",
+    ".yaml",
+    ".yml",
+}
+TEXT_FILENAMES = {".gitattributes", ".gitignore", "LICENSE", "CBCR License"}
 
 
 def included(path: Path) -> bool:
@@ -37,10 +52,17 @@ def included(path: Path) -> bool:
     )
 
 
+def sha256_file(path: Path) -> str:
+    payload = path.read_bytes()
+    if path.suffix.casefold() in TEXT_SUFFIXES or path.name in TEXT_FILENAMES:
+        payload = payload.replace(b"\r\n", b"\n")
+    return hashlib.sha256(payload).hexdigest()
+
+
 def main() -> None:
     lines = []
     for path in sorted(path for path in ROOT.rglob("*") if included(path)):
-        digest = hashlib.sha256(path.read_bytes()).hexdigest()
+        digest = sha256_file(path)
         relative = path.relative_to(ROOT).as_posix()
         lines.append(f"{digest}  {relative}")
     OUTPUT.write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")

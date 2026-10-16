@@ -58,6 +58,26 @@ BCI2020_ARCHIVED_CONFIG_SHA256 = {
 BCI2020_ARCHIVED_PATH_SOURCES = set(BCI2020_ARCHIVED_CONFIG_SHA256) | {
     "addition/bci2020_suite/preflight_all_models.py",
 }
+MANIFEST_TEXT_SUFFIXES = {
+    ".bib",
+    ".csv",
+    ".ini",
+    ".json",
+    ".md",
+    ".py",
+    ".sh",
+    ".sha256",
+    ".svg",
+    ".txt",
+    ".yaml",
+    ".yml",
+}
+MANIFEST_TEXT_FILENAMES = {
+    ".gitattributes",
+    ".gitignore",
+    "LICENSE",
+    "CBCR License",
+}
 
 
 def validate_configs() -> None:
@@ -153,7 +173,7 @@ def validate_baseline_manifests() -> None:
             and "__pycache__" not in path.parts
         )
         observed = {
-            path.relative_to(root).as_posix(): sha256_file(path)
+            path.relative_to(root).as_posix(): sha256_manifest_file(path)
             for path in paths
         }
         if observed != expected:
@@ -194,7 +214,7 @@ def validate_root_manifest() -> None:
         )
     )
     observed = {
-        path.relative_to(ROOT).as_posix(): sha256_file(path)
+        path.relative_to(ROOT).as_posix(): sha256_manifest_file(path)
         for path in paths
     }
     if observed != expected:
@@ -223,6 +243,17 @@ def sha256_file(path: Path) -> str:
         for block in iter(lambda: handle.read(1024 * 1024), b""):
             digest.update(block)
     return digest.hexdigest()
+
+
+def sha256_manifest_file(path: Path) -> str:
+    """Hash text with canonical LF endings and binary files byte-for-byte."""
+    payload = path.read_bytes()
+    if (
+        path.suffix.casefold() in MANIFEST_TEXT_SUFFIXES
+        or path.name in MANIFEST_TEXT_FILENAMES
+    ):
+        payload = payload.replace(b"\r\n", b"\n")
+    return hashlib.sha256(payload).hexdigest()
 
 
 def validate_bci2020_archived_configs() -> None:

@@ -13,14 +13,28 @@ TARGETS = {
     ROOT / "baselines" / "atcnet": "MANIFEST_SHA256.txt",
     ROOT / "baselines" / "fast": "MANIFEST_SHA256_FAST_ARCHIVE.txt",
 }
+TEXT_SUFFIXES = {
+    ".bib",
+    ".csv",
+    ".ini",
+    ".json",
+    ".md",
+    ".py",
+    ".sh",
+    ".sha256",
+    ".svg",
+    ".txt",
+    ".yaml",
+    ".yml",
+}
+TEXT_FILENAMES = {".gitattributes", ".gitignore", "LICENSE", "CBCR License"}
 
 
 def sha256_file(path: Path) -> str:
-    digest = hashlib.sha256()
-    with path.open("rb") as handle:
-        for block in iter(lambda: handle.read(1024 * 1024), b""):
-            digest.update(block)
-    return digest.hexdigest()
+    payload = path.read_bytes()
+    if path.suffix.casefold() in TEXT_SUFFIXES or path.name in TEXT_FILENAMES:
+        payload = payload.replace(b"\r\n", b"\n")
+    return hashlib.sha256(payload).hexdigest()
 
 
 def main() -> None:

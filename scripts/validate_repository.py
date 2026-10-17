@@ -60,7 +60,16 @@ BCI2020_ARCHIVED_PATH_SOURCES = set(BCI2020_ARCHIVED_CONFIG_SHA256) | {
 }
 MANIFEST_TEXT_SUFFIXES = {
     ".bib",
+    ".c",
+    ".cc",
+    ".cpp",
+    ".cu",
+    ".cuh",
+    ".cxx",
     ".csv",
+    ".h",
+    ".hpp",
+    ".hxx",
     ".ini",
     ".json",
     ".md",

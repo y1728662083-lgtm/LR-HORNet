@@ -15,7 +15,16 @@ TARGETS = {
 }
 TEXT_SUFFIXES = {
     ".bib",
+    ".c",
+    ".cc",
+    ".cpp",
+    ".cu",
+    ".cuh",
+    ".cxx",
     ".csv",
+    ".h",
+    ".hpp",
+    ".hxx",
     ".ini",
     ".json",
     ".md",

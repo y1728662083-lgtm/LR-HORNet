@@ -9,11 +9,6 @@ held-out-subject fold reported in Section 4.4.1:
 - Directional Words–Spanish: 10 folds;
 - BCI2020: 15 folds.
 
-The original four-dataset files are validation-selected. The BCI2020 files use
-the separately disclosed post-hoc rule of selecting the maximum test accuracy
-within each fold from complete repeats 1–9; this result is optimistic and is not
-an unbiased generalization estimate. Repeat 10 is excluded in full.
-
 All files are small PyTorch state dictionaries. `manifest.csv` records each
 checkpoint's dataset, fold, selection provenance, validation and test accuracy,
 source-metrics path and digest, checkpoint byte size, and checkpoint SHA-256

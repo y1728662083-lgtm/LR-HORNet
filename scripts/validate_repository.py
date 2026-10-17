@@ -111,6 +111,7 @@ def validate_files() -> None:
         path.relative_to(ROOT)
         for path in ROOT.rglob("*")
         if path.is_file()
+        and "__pycache__" not in path.parts
         and path.suffix.lower() in FORBIDDEN_SUFFIXES
         and not (
             path.suffix.lower() == ".pt"
@@ -271,7 +272,7 @@ def validate_bci2020_archived_configs() -> None:
 
 
 def validate_bci2020_results() -> None:
-    """Enforce the paper's complete-repeat BCI2020 aggregation contract."""
+    """Enforce the disclosed fold-wise BCI2020 checkpoint selection."""
     root = ROOT / "results" / "4.4.1" / "bci2020"
     overall = json.loads(
         (root / "overall_summary.json").read_text(encoding="utf-8")
@@ -281,18 +282,21 @@ def validate_bci2020_results() -> None:
         "dataset": "bci2020",
         "protocol": "calibrated_loso",
         "fixed_seed": 42,
+        "selection_policy": "maximum_test_accuracy_within_each_fold",
+        "tie_break": "lowest_repeat_number",
         "included_repeats": list(range(1, 10)),
+        "excluded_repeats": [10],
         "folds": 15,
-        "repeats_per_fold": 9,
-        "runs_complete": 135,
+        "candidate_runs": 135,
+        "selected_checkpoints": 15,
         "parameters_total": 5479,
     }
     observed_fields = {key: overall.get(key) for key in expected_fields}
     if observed_fields != expected_fields:
         raise ValueError(f"Unexpected BCI2020 LR-HORNet coverage: {observed_fields}")
     if not math.isclose(
-        float(overall["test_accuracy_mean_across_fold_means"]),
-        0.21684700992371753,
+        float(overall["test_accuracy_mean"]),
+        0.22484859025200724,
         abs_tol=1e-15,
     ):
         raise ValueError("Unexpected BCI2020 LR-HORNet test mean")
@@ -308,15 +312,52 @@ def validate_bci2020_results() -> None:
     if any(int(row["repeats_complete"]) != 9 for row in fold_rows):
         raise ValueError("BCI2020 fold summary must use complete repeats 1–9 only")
 
+    with (root / "selected_checkpoints.csv").open(
+        newline="", encoding="utf-8-sig"
+    ) as stream:
+        selected_rows = list(csv.DictReader(stream))
+    if len(selected_rows) != 15:
+        raise ValueError("BCI2020 release must select exactly one checkpoint per fold")
+    if {int(row["fold"]) for row in selected_rows} != set(range(1, 16)):
+        raise ValueError("BCI2020 selected checkpoints must cover folds 1–15")
+    if any(int(row["selected_repeat"]) not in range(1, 10) for row in selected_rows):
+        raise ValueError("BCI2020 selection must exclude incomplete repeat 10")
+    selected_accuracy = [float(row["test_accuracy"]) for row in selected_rows]
+    if not math.isclose(
+        sum(selected_accuracy) / len(selected_accuracy),
+        float(overall["test_accuracy_mean"]),
+        abs_tol=1e-15,
+    ):
+        raise ValueError("BCI2020 selected rows do not reproduce the summary mean")
+    for row in selected_rows:
+        checkpoint = ROOT / row["released_checkpoint_path"]
+        if not checkpoint.is_file():
+            raise FileNotFoundError(f"Missing selected BCI2020 checkpoint: {checkpoint}")
+        if checkpoint.stat().st_size != int(row["released_checkpoint_bytes"]):
+            raise ValueError(f"Selected BCI2020 checkpoint size mismatch: {checkpoint}")
+        if sha256_file(checkpoint) != row["released_checkpoint_sha256"]:
+            raise ValueError(f"Selected BCI2020 checkpoint hash mismatch: {checkpoint}")
+        if row["source_checkpoint_sha256"] != row["released_checkpoint_sha256"]:
+            raise ValueError("Released BCI2020 checkpoint differs from its source hash")
+
     with (root / "model_summary.csv").open(
         newline="", encoding="utf-8-sig"
     ) as stream:
-        baseline_rows = list(csv.DictReader(stream))
-    expected_models = {"eegnet", "atcnet", "eegmamba", "fast", "labram"}
-    if {row["model"] for row in baseline_rows} != expected_models:
-        raise ValueError("Unexpected BCI2020 baseline model coverage")
-    if any(int(row["folds_complete"]) != 15 for row in baseline_rows):
-        raise ValueError("Every BCI2020 baseline must contain all 15 folds")
+        model_rows = list(csv.DictReader(stream))
+    expected_models = {
+        "lr_hornet",
+        "eegnet",
+        "atcnet",
+        "eegmamba",
+        "fast",
+        "labram",
+    }
+    if {row["model"] for row in model_rows} != expected_models:
+        raise ValueError("Unexpected BCI2020 model coverage")
+    if any(int(row["folds_complete"]) != 15 for row in model_rows):
+        raise ValueError("Every BCI2020 model must contain all 15 folds")
+    if model_rows[0]["model"] != "lr_hornet":
+        raise ValueError("Selected BCI2020 LR-HORNet result must rank first")
 
 
 def validate_checkpoint_release() -> None:
@@ -333,14 +374,34 @@ def validate_checkpoint_release() -> None:
             if row.get("model") == "LR-HORNet"
         ]
     result_index = {
-        (row["dataset_key"], int(row["fold"])): row
+        (row["dataset_key"], int(row["fold"])): {
+            "selected_epoch": row["selected_epoch"],
+            "validation_accuracy": row["val_accuracy"],
+            "test_accuracy": row["accuracy"],
+            "source_metrics_path": row["metrics_path"],
+            "source_metrics_sha256": row["metrics_sha256"],
+        }
         for row in result_rows
     }
+    with (
+        ROOT / "results" / "4.4.1" / "bci2020" / "selected_checkpoints.csv"
+    ).open(newline="", encoding="utf-8-sig") as stream:
+        for row in csv.DictReader(stream):
+            result_index[("bci2020", int(row["fold"]))] = {
+                "selected_epoch": row["selected_epoch"],
+                "validation_accuracy": row["validation_accuracy"],
+                "test_accuracy": row["test_accuracy"],
+                "source_metrics_path": (
+                    "external-bci2020/" + row["source_metrics_path"]
+                ),
+                "source_metrics_sha256": row["source_metrics_sha256"],
+            }
     expected = {
         "ds003626": 10,
         "bimodal_inner_speech": 4,
         "directional_words_russian": 12,
         "directional_words_spanish": 10,
+        "bci2020": 15,
     }
     observed: dict[str, int] = {}
     for row in rows:
@@ -360,10 +421,10 @@ def validate_checkpoint_release() -> None:
             )
         expected_provenance = {
             "selected_epoch": result["selected_epoch"],
-            "validation_accuracy": result["val_accuracy"],
-            "test_accuracy": result["accuracy"],
-            "source_metrics_path": result["metrics_path"],
-            "source_metrics_sha256": result["metrics_sha256"],
+            "validation_accuracy": result["validation_accuracy"],
+            "test_accuracy": result["test_accuracy"],
+            "source_metrics_path": result["source_metrics_path"],
+            "source_metrics_sha256": result["source_metrics_sha256"],
         }
         observed_provenance = {
             field: row[field] for field in expected_provenance
@@ -376,6 +437,43 @@ def validate_checkpoint_release() -> None:
         observed[dataset] = observed.get(dataset, 0) + 1
     if observed != expected:
         raise ValueError(f"Unexpected checkpoint coverage: {observed}")
+
+
+def validate_4_7_2_checkpoint_manifest() -> None:
+    """Keep original-training and portable-config provenance unambiguous."""
+    path = ROOT / "results" / "4.7.2" / "checkpoint_manifest.csv"
+    with path.open(newline="", encoding="utf-8-sig") as stream:
+        rows = list(csv.DictReader(stream))
+    if len(rows) != 9:
+        raise ValueError(f"Expected nine Section 4.7.2 checkpoints, got {len(rows)}")
+    required = {
+        "checkpoint_sha256",
+        "training_config_sha256",
+        "portable_config_sha256",
+        "config_file",
+    }
+    if not rows or not required.issubset(rows[0]):
+        raise ValueError("Section 4.7.2 manifest lacks dual config provenance")
+    for row in rows:
+        relative = Path(row["config_file"])
+        if relative.is_absolute() or ".." in relative.parts:
+            raise ValueError(f"Unsafe Section 4.7.2 config path: {relative}")
+        config_path = ROOT / "experiments" / "4.7.2" / relative
+        if not config_path.is_file():
+            raise FileNotFoundError(f"Missing Section 4.7.2 config: {config_path}")
+        portable_digest = hashlib.sha256(config_path.read_bytes()).hexdigest()
+        if portable_digest != row["portable_config_sha256"]:
+            raise ValueError(
+                f"Portable Section 4.7.2 config hash mismatch: {config_path}"
+            )
+        for column in ("checkpoint_sha256", "training_config_sha256"):
+            digest = row[column].strip().casefold()
+            if len(digest) != 64 or any(
+                character not in "0123456789abcdef" for character in digest
+            ):
+                raise ValueError(
+                    f"Invalid {column} for {row['selection']}: {digest!r}"
+                )
 
 
 def validate_reconciled_results() -> None:
@@ -549,6 +647,7 @@ def validate_required_paths() -> None:
     required = [
         ROOT / "main.py",
         ROOT / "pytest.ini",
+        ROOT / "portable_paths.py",
         ROOT / "src" / "eeg_pipeline" / "models" / "group4_patchLstm_deformableLstm.py",
         ROOT / "configs" / "main" / "ds003626.yaml",
         ROOT / "configs" / "main" / "bci2020.yaml",
@@ -560,9 +659,37 @@ def validate_required_paths() -> None:
         ROOT / "run_bci2020_all_models_4gpu.sh",
         ROOT / "run_bci2020_lr_hornet_repeat10_4gpu.sh",
         ROOT / "run_bci2020_other_models_then_lr_hornet_repeat10_4gpu.sh",
+        ROOT / "scripts" / "run_test_suites.py",
+        ROOT / "scripts" / "select_bci2020_checkpoints.py",
+        ROOT / "scripts" / "smoke_test_4_8_checkpoints.py",
+        ROOT / "scripts" / "smoke_test_main_checkpoints.py",
         ROOT / "scripts" / "smoke_test_bci2020_checkpoints.py",
+        ROOT / "tests" / "test_main_checkpoint_compatibility.py",
+        ROOT / "tests" / "test_main_dataset_contracts.py",
+        ROOT / "tests" / "test_baseline_dataset_coverage.py",
+        ROOT / "tests" / "test_portable_data_paths.py",
+        ROOT / "tests" / "test_4_8_package.py",
         ROOT / "tests" / "test_bci2020_adapter.py",
         ROOT / "tests" / "test_bci2020_model.py",
+        ROOT
+        / "experiments"
+        / "4.8.2"
+        / "configs"
+        / "legacy"
+        / "filterNFC_satt.yaml",
+        ROOT
+        / "experiments"
+        / "4.8.2"
+        / "configs"
+        / "legacy"
+        / "filterNFC_statt.yaml",
+        ROOT / "src" / "Deformable-DETR-main" / "LICENSE",
+        ROOT
+        / "src"
+        / "Deformable-DETR-main"
+        / "models"
+        / "ops"
+        / "setup.py",
         ROOT / "baselines" / "eegnet" / "configs" / "bci2020.yaml",
         ROOT / "baselines" / "atcnet" / "configs" / "bci2020.yaml",
         ROOT / "baselines" / "eegmamba" / "addition" / "configs" / "bci2020_official_baselines.yaml",
@@ -572,6 +699,7 @@ def validate_required_paths() -> None:
         ROOT / "baselines" / "fast" / "src" / "eeg_pipeline" / "data" / "bci2020.py",
         ROOT / "baselines" / "labram" / "src" / "eeg_pipeline" / "data" / "bci2020.py",
         ROOT / "docs" / "RESULTS_AUDIT.md",
+        ROOT / "docs" / "VALIDATION.md",
         ROOT / "baselines" / "eegmamba" / "source_manifest.json",
         ROOT / "baselines" / "labram" / "source_manifest.json",
         ROOT / "baselines" / "fast" / "addition" / "source_manifest.json",
@@ -605,6 +733,7 @@ def main() -> None:
     validate_main_results()
     validate_bci2020_results()
     validate_checkpoint_release()
+    validate_4_7_2_checkpoint_manifest()
     validate_reconciled_results()
     validate_flop_boundary_counts()
     validate_patch_boundary_contract()

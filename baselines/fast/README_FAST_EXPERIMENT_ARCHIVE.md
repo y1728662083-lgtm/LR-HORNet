@@ -7,10 +7,11 @@ after training.
 ## Experiment scope
 
 Only FAST is scheduled by this archive. The Paper4 model
-`group4_patchLstm_deformableLstm` is not referenced by any of the four YAML
+`group4_patchLstm_deformableLstm` is not referenced by any of the five YAML
 files or by the dispatcher.
 
-The dispatcher creates 36 FAST fits:
+The package-local dispatcher creates 36 FAST fits for the original four
+datasets:
 
 | Dataset | Effective input rate | FAST window / stride | Classes | Folds |
 |---|---:|---:|---:|---:|
@@ -19,13 +20,18 @@ The dispatcher creates 36 FAST fits:
 | Spanish directional words | 500 Hz | 500 / 250 samples | 6 | 10 |
 | Bimodal inner speech | 512 Hz | 256 / 128 samples | 8 | 4 |
 
-All four configurations use `dim_token: 32` and the calibrated LOSO split.
+The fifth configuration covers BCI2020 (256 Hz, 256/128-sample window/stride,
+5 classes, 15 folds). It is launched from the repository root by
+`run_bci2020_all_models_4gpu.sh`, which creates a portable runtime copy of the
+hash-locked archived YAML.
+
+All five configurations use `dim_token: 32` and the calibrated LOSO split.
 Russian and Spanish are independent datasets. Their channel intersections are
 computed separately by `src/eeg_pipeline/data/directional_words.py`.
 
 ## Important files
 
-- `addition/configs/fast_native_*.yaml`: exact four-dataset configurations.
+- `addition/configs/fast_native_*.yaml`: exact five-dataset configurations.
 - `addition/official_sources/FAST/`: author-released FAST source, license,
   citation and README.
 - `addition/fast_native_adapter.py`: dataset-grid adapter around official FAST.
@@ -46,14 +52,14 @@ or executed by this FAST archive.
 
 ## Verification and execution
 
-From the Paper4 repository root, these files retain their original relative
-paths. Verify inputs first:
+Relative `data.root` values are resolved against the top-level LR-HORNet
+repository. From `baselines/fast`, verify inputs first:
 
 ```bash
 bash check_fast_inputs_only.sh
 ```
 
-Run all 36 FAST fits sequentially on GPU 0:
+Run the original 36 FAST fits sequentially on GPU 0:
 
 ```bash
 bash run_fast_native_single_gpu.sh 0

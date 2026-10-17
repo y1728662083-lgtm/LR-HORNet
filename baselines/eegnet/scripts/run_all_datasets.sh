@@ -7,6 +7,7 @@ PYTHON_BIN="${PYTHON_BIN:-python}"
 ARCHITECTURE="EEGNet"
 
 export PYTHONPATH="$PAPER4_ROOT/src:$PAPER4_ROOT:${PYTHONPATH:-}"
+cd "$PAPER4_ROOT"
 
 if [[ "${PREPROCESS_BIMODAL:-0}" == "1" ]]; then
   "$PYTHON_BIN" -u "$PAPER4_ROOT/preprocessing.py" \

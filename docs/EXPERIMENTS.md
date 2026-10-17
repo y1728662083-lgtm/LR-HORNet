@@ -21,7 +21,7 @@ The Bash launchers accept or read a dataset root and an output root, create run-
     python experiments/4.6.3/scripts/run_4_6_3.py --help
     python experiments/4.8.2/scripts/run_4_8_2.py --help
 
-Most YAML files checked into Git use repository-relative data/ and outputs/ paths. The seven archived BCI2020 source configurations retain their original server paths byte-for-byte so their SHA-256 values remain tied to the completed runs; the portable launchers generate ignored runtime YAML files with explicit local data and output roots. Generated run configurations and non-selected checkpoints belong under outputs/, which is ignored by Git. The 36 selected state dictionaries released under checkpoints/main/ cover the original four datasets; the 223 local BCI2020 checkpoints are not committed.
+Most YAML files checked into Git use repository-relative data/ and outputs/ paths. The seven archived BCI2020 source configurations retain their original server paths byte-for-byte so their SHA-256 values remain tied to the completed runs; the portable launchers generate ignored runtime YAML files with explicit local data and output roots. Generated run configurations and non-selected checkpoints belong under outputs/, which is ignored by Git. The 51 released state dictionaries under checkpoints/main/ cover all five datasets; only the 15 fold-wise selected BCI2020 checkpoints are committed from the 223-file local BCI2020 result tree.
 
 ## BCI2020 launch and validation
 
@@ -41,11 +41,21 @@ For archived checkpoints stored outside Git, perform strict state restoration an
 
     python scripts/smoke_test_bci2020_checkpoints.py --results-root /absolute/path/to/BCI2020/results --device cpu
 
+On a host without the optional `mamba_ssm` extension, validate every other
+model family explicitly and report EEGMamba as dependency-blocked rather than
+as a checkpoint failure:
+
+    python scripts/smoke_test_bci2020_checkpoints.py --results-root /absolute/path/to/BCI2020/results --device cpu --models lr_hornet eegnet atcnet fast labram
+
 The paper summary does not treat the tenth LR-HORNet repeat as complete. Repeats 1–9 provide 135 completed fits. In repeat 10, folds 1–9 are complete, folds 10–13 have checkpoints and training logs but lack completed test-stage results, and folds 14–15 are absent; the entire partial repeat is excluded from the paper aggregate.
 
-To regenerate the reported aggregate from that partially populated external result tree, select the nine complete repeat identifiers explicitly:
+To regenerate the released fold-wise checkpoint selection and its reported aggregate from that partially populated external result tree, run:
 
-    python addition/bci2020_suite/summarize_lr_hornet_fixed_seed_repeats.py --root /absolute/path/to/bci2020_lr_hornet_fixed_seed_repeat10 --expected-folds 15 --include-repeats 1 2 3 4 5 6 7 8 9 --expected-seed 42
+    python scripts/select_bci2020_checkpoints.py --results-root /absolute/path/to/bci2020_lr_hornet_fixed_seed_repeat10
+
+The legacy `summarize_lr_hornet_fixed_seed_repeats.py --include-repeats 1 ... 9`
+command produces a descriptive nine-repeat aggregate. It does not reproduce the
+released maximum-test-accuracy selection.
 
 ## Interpretation
 

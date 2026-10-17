@@ -576,6 +576,8 @@ def load_task_sessions(
                     preload=preload,
                 )
                 task_data = select_task_trials(session_data, normalized_task)
+            except FileNotFoundError:
+                raise
             except Exception as error:
                 raise RuntimeError(
                     f"Failed to load task {normalized_task!r} for "

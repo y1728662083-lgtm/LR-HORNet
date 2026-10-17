@@ -52,5 +52,9 @@ def main() -> None:
     print(f"Section 4.6.3 model smoke test passed; parameters={counts}")
 
 
+def test_section_4_6_3_models() -> None:
+    main()
+
+
 if __name__ == "__main__":
     main()

@@ -114,6 +114,17 @@ def load_task_sessions(
             preload=preload,
             verbose="ERROR",
         )
+        if len(epochs.ch_names) != 64 or not np.isclose(
+            epochs.info["sfreq"], 512.0
+        ):
+            raise RuntimeError(
+                f"Expected 64 EEG channels sampled at 512 Hz in {epochs_path}"
+            )
+        if len(epochs.times) != 359:
+            raise RuntimeError(
+                f"Expected 359 samples per epoch in {epochs_path}, "
+                f"got {len(epochs.times)}"
+            )
         code_to_name = {
             int(code): name.casefold()
             for name, code in epochs.event_id.items()

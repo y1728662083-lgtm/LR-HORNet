@@ -10,6 +10,7 @@
 | Bimodal inner speech | 4 | 64 × 359，512 Hz |
 | Directional words — Russian | 12 | 34 × 250，250 Hz |
 | Directional words — Spanish | 10 | 38 × 750，500 Hz |
+| BCI2020 | 15 | 64 × 795，256 Hz |
 
 Russian 与 Spanish 是两个独立数据集，分别取各自语言内部的公共通道，不跨语言对齐或混合。所有训练沿用 paper4 的带校准 LOSO 数据划分与相同训练引擎。
 
@@ -40,6 +41,8 @@ cd /path/to/this/atcnet
 PAPER4_ROOT=/path/to/LR-HORNet CUDA_VISIBLE_DEVICES=0 \
   bash scripts/run_all_datasets.sh
 ```
+
+`run_all_datasets.sh` 复现原始四数据集批次。BCI2020 的历史 YAML 保留训练时绝对路径以维持哈希，便携运行应在仓库根目录通过 `run_bci2020_all_models_4gpu.sh` 生成本地运行配置。
 
 默认复用已有 Bimodal derivatives。若需先执行归档的官方预处理链路：
 

@@ -34,6 +34,9 @@ from eeg_pipeline.models.deformable_patchCfC import (
 from eeg_pipeline.models.group4_patchLstm_deformableLstm import (
     build_group4_patchlstm_deformablelstm,
 )
+from eeg_pipeline.models.group4_causal1_deformableLstm import (
+    build_group4_causal1_deformablelstm,
+)
 from eeg_pipeline.models.group4_patchLstm_deformableLstm_satt import (
     build_group4_patchlstm_deformablelstm_satt,
 )
@@ -136,6 +139,12 @@ MODEL_BUILDERS = {
     ),
     "group4_patchlstm_deformablelstm": (
         build_group4_patchlstm_deformablelstm
+    ),
+    "group4_causal1_deformableLstm": (
+        build_group4_causal1_deformablelstm
+    ),
+    "group4_causal1_deformablelstm": (
+        build_group4_causal1_deformablelstm
     ),
     "group4_patchLstm_deformableLstm_satt": (
         build_group4_patchlstm_deformablelstm_satt

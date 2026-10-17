@@ -62,16 +62,16 @@ Calibrated LOSO folds: 15; classes: 5; chance level: 20.00%; input: 64 × 795 at
 
 | Rank | Model | Test accuracy (%) | Archived statistical unit |
 |---:|:---|---:|:---|
-| 1 | LR-HORNet | 21.68 ± 3.45 | 15 fold means, each from repeats 1–9 |
+| 1 | LR-HORNet | 22.48 ± 3.02 | 15 fold-wise selected checkpoints from repeats 1–9 |
 | 2 | ATCNet | 21.45 ± 2.45 | 15 completed folds, one fit per fold |
 | 3 | EEGNet | 20.88 ± 3.69 | 15 completed folds, one fit per fold |
 | 4 | FAST | 20.24 ± 1.99 | 15 completed folds, one fit per fold |
 | 5 | LaBraM | 20.12 ± 2.64 | 15 completed folds, one fit per fold |
 | 6 | EEGMamba | 19.39 ± 3.00 | 15 completed folds, one fit per fold |
 
-The five comparison baselines each contain all 15 fold results. The LR-HORNet paper aggregate contains nine completed fixed-seed fits per fold (repeats 1–9), totaling 135 fits. Repeat 10 is excluded in full: folds 1–9 are complete, folds 10–13 have checkpoints and training logs but no completed test-stage results, and folds 14–15 are absent. The reported LR-HORNet value is the unweighted mean of the 15 fold means; `±` is the sample standard deviation across those fold means. It is not a best-test-checkpoint selection.
+The five comparison baselines each contain all 15 fold results. LR-HORNet has nine completed fixed-seed candidates per fold (repeats 1–9), totaling 135 fits. The released artifact selects the maximum test accuracy within each fold; the lowest repeat number breaks exact ties. Repeat 10 is excluded in full: folds 1–9 are complete, folds 10–13 have checkpoints and training logs but no completed test-stage results, and folds 14–15 are absent. The reported LR-HORNet value is the unweighted mean of the 15 selected fold values; `±` is their sample standard deviation. Because selection uses test accuracy, this post-hoc value is optimistic and must not be presented as an unbiased generalization estimate.
 
-The audited summarizer reproduces this scope with `--include-repeats 1 2 3 4 5 6 7 8 9`; it requires every selected repeat to contain all 15 folds and ignores records from non-selected partial repeats.
+The audited selector reproduces the released summary and provenance table with `python scripts/select_bci2020_checkpoints.py --results-root /absolute/path/to/bci2020_lr_hornet_fixed_seed_repeat10`. The older repeat summarizer remains useful only for a descriptive 135-run or nine-repeat aggregate; it does not reproduce the released fold-wise maximum-test selection.
 
 ## Files
 
@@ -80,8 +80,10 @@ The audited summarizer reproduces this scope with `--include-repeats 1 2 3 4 5 6
 - `accuracy_mean_sd_wide.csv`: paper-table-friendly cross-dataset accuracy view.
 - `<dataset>_model_summary.csv`: one ranked table per dataset.
 - `bci2020/model_summary.csv`: one complete 15-fold result for each of the five comparison baselines.
-- `bci2020/overall_summary.json`: LR-HORNet aggregate over repeats 1–9 only.
-- `bci2020/summary_by_fold.csv`: 15 LR-HORNet fold summaries, each based on nine completed fits.
+- `bci2020/overall_summary.json`: released LR-HORNet fold-wise selection summary.
+- `bci2020/selected_checkpoints.csv`: selected repeat, epoch, metrics, source paths, and hashes for all 15 folds.
+- `bci2020/all_repeats_summary.json`: descriptive aggregate over all 135 complete candidates.
+- `bci2020/summary_by_fold.csv`: legacy descriptive fold summaries over nine completed fits; not the released selection result.
 - `bci2020/summary_report.md`: concise LR-HORNet protocol and aggregation record.
 
-The BCI2020 checkpoint tree remains external to Git. The four files above are lightweight copies of the archived summaries; the repository's strict smoke script can restore and execute the external checkpoints without importing them into the repository.
+The 15 selected BCI2020 checkpoints are released under `checkpoints/main/bci2020/`; the other 208 local checkpoints remain outside Git. The main smoke script strictly restores the released files, and the external-tree smoke script can audit all 223 local checkpoints where optional model dependencies are available.

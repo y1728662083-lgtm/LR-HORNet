@@ -12,8 +12,7 @@ data:
     derivatives_root: derivatives/paper4/bimodal
 
 preprocessing:
-  official_code_source: anxiliary/official_preprocessing/bimodal
-  official_code_zip: anxiliary/official_preprocessing/_archives/bimodal_official.zip
+  official_code_source: official_preprocessing/bimodal
   output_root: derivatives/paper4/bimodal
   overwrite: false
   verbose: false

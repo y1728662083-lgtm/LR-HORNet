@@ -18,7 +18,9 @@ BUILDERS = {
 
 
 def main() -> None:
-    configs = sorted((PACKAGE / "configs").glob("*.yaml"))
+    configs = sorted(
+        (PACKAGE / "experiments" / "4.7.1" / "configs").glob("*.yaml")
+    )
     if len(configs) != 4:
         raise RuntimeError(f"Expected four YAML files, found {configs}")
     configured = []
@@ -47,6 +49,10 @@ def main() -> None:
         if fragment not in grouped:
             raise RuntimeError(f"Grouped-convolution implementation is missing {fragment!r}")
     print("4.7.1 builder/YAML/factory smoke test passed")
+
+
+def test_section_4_7_1_builders_and_configs() -> None:
+    main()
 
 
 if __name__ == "__main__":

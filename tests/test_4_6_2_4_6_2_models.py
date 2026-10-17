@@ -38,5 +38,9 @@ def main() -> None:
     print("Section 4.6.2 model smoke test passed")
 
 
+def test_section_4_6_2_models() -> None:
+    main()
+
+
 if __name__ == "__main__":
     main()

@@ -17,6 +17,7 @@ import yaml
 
 ADDITION_ROOT = Path(__file__).resolve().parent
 PAPER4_ROOT = ADDITION_ROOT.parent
+REPOSITORY_ROOT = ADDITION_ROOT.parents[2]
 CONFIG_ROOT = ADDITION_ROOT / "configs"
 REPORT_PATH = PAPER4_ROOT / "outputs" / "addition" / "fast_native_dim32_input_report.json"
 BIMODAL_MEMBER = "Inner_Speech_EEG_fMRI-main/EEG_preprocessing/preprocess.py"
@@ -44,7 +45,9 @@ EXPECTED_DIRECTIONAL_GRID = {
 sys.path.insert(0, str(PAPER4_ROOT / "src"))
 sys.path.insert(0, str(PAPER4_ROOT))
 sys.path.insert(0, str(ADDITION_ROOT))
+sys.path.append(str(REPOSITORY_ROOT))
 
+from portable_paths import resolve_config_data_root
 from eeg_pipeline.data.dataset import EEGTaskDataset
 from eeg_pipeline.data.preprocessing import preprocess_from_config
 from eeg_pipeline.data.registry import load_task_sessions
@@ -56,7 +59,9 @@ from fast_native_adapter import build_fast_native_model
 
 
 def load_yaml(path: Path) -> dict:
-    return yaml.safe_load(path.read_text(encoding="utf-8"))
+    config = yaml.safe_load(path.read_text(encoding="utf-8"))
+    resolve_config_data_root(config, repository_root=REPOSITORY_ROOT)
+    return config
 
 
 def resolve_paper4_path(value: str | Path) -> Path:

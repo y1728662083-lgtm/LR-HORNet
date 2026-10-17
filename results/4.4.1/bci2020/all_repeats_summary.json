@@ -1,0 +1,17 @@
+{
+  "included_repeats": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "runs_complete": 135,
+  "test_accuracy_mean_all_runs": 0.21684700992371755,
+  "test_accuracy_std_all_runs": 0.034809140630192116,
+  "note": "Descriptive only; not the released per-fold selection summary."
+}

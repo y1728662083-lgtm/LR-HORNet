@@ -64,5 +64,9 @@ def main() -> None:
     print("4.7.2 offset mechanism CPU tests passed")
 
 
+def test_section_4_7_2_offset_mechanism() -> None:
+    main()
+
+
 if __name__ == "__main__":
     main()

@@ -68,6 +68,16 @@ def _parse_args() -> argparse.Namespace:
         help="Forward-pass device. 'auto' uses CUDA when available.",
     )
     parser.add_argument(
+        "--models",
+        nargs="+",
+        choices=MODEL_ORDER,
+        help=(
+            "Optional model families to validate. Omit to require all six; "
+            "this is useful when an optional dependency such as mamba_ssm "
+            "is unavailable."
+        ),
+    )
+    parser.add_argument(
         "--_worker-model",
         choices=MODEL_ORDER,
         help=argparse.SUPPRESS,
@@ -365,7 +375,11 @@ def _worker(results_root: Path, model_name: str, requested_device: str) -> int:
     return 0
 
 
-def _controller(results_root: Path, requested_device: str) -> int:
+def _controller(
+    results_root: Path,
+    requested_device: str,
+    selected_models: tuple[str, ...] | None = None,
+) -> int:
     results_root = results_root.expanduser().resolve()
     if not results_root.is_dir():
         print(f"[FAIL] Results root is not a directory: {results_root}")
@@ -382,12 +396,17 @@ def _controller(results_root: Path, requested_device: str) -> int:
         for path in unknown:
             print(f"  {path.relative_to(results_root)}")
 
-    missing = [model for model in MODEL_ORDER if not groups[model]]
+    selected_models = (
+        MODEL_ORDER
+        if selected_models is None
+        else tuple(dict.fromkeys(selected_models))
+    )
+    missing = [model for model in selected_models if not groups[model]]
     if missing:
         print("[FAIL] Missing required model groups: " + ", ".join(missing))
 
     failed_models: list[str] = []
-    for model in MODEL_ORDER:
+    for model in selected_models:
         if not groups[model]:
             continue
         command = [
@@ -413,7 +432,8 @@ def _controller(results_root: Path, requested_device: str) -> int:
             print("[FAIL] Failed model groups: " + ", ".join(failed_models))
         return 1
     print(
-        f"[PASS] All {sum(counts.values())} BCI2020 checkpoints passed "
+        f"[PASS] All {sum(counts[model] for model in selected_models)} selected "
+        "BCI2020 checkpoints passed "
         "weights-only load, strict restoration, and forward execution."
     )
     return 0
@@ -424,7 +444,11 @@ def main() -> int:
     results_root = args.results_root.expanduser().resolve()
     if args._worker_model:
         return _worker(results_root, args._worker_model, args.device)
-    return _controller(results_root, args.device)
+    return _controller(
+        results_root,
+        args.device,
+        None if args.models is None else tuple(args.models),
+    )
 
 
 if __name__ == "__main__":

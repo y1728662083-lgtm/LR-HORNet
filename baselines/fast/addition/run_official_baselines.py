@@ -17,10 +17,13 @@ from torch.utils.data import ConcatDataset, DataLoader, Dataset, Subset
 
 ADDITION_ROOT = Path(__file__).resolve().parent
 PAPER4_ROOT = ADDITION_ROOT.parent
+REPOSITORY_ROOT = ADDITION_ROOT.parents[2]
 sys.path.insert(0, str(PAPER4_ROOT / "src"))
 sys.path.insert(0, str(PAPER4_ROOT))
 sys.path.insert(0, str(ADDITION_ROOT))
+sys.path.append(str(REPOSITORY_ROOT))
 
+from portable_paths import resolve_config_data_root
 from adapters import build_official_model
 from common import (
     count_parameters,
@@ -42,6 +45,7 @@ from training import fit_model, predict_and_score
 def load_config(path: str | Path) -> dict[str, Any]:
     with Path(path).open(encoding="utf-8") as handle:
         config = yaml.safe_load(handle)
+    resolve_config_data_root(config, repository_root=REPOSITORY_ROOT)
     required = {"seed", "data", "split", "input_adapter", "models", "training"}
     missing = required - set(config)
     if missing:

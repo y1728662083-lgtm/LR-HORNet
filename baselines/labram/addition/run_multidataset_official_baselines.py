@@ -12,10 +12,13 @@ import yaml
 
 ADDITION_ROOT = Path(__file__).resolve().parent
 PAPER4_ROOT = ADDITION_ROOT.parent
+REPOSITORY_ROOT = ADDITION_ROOT.parents[2]
 sys.path.insert(0, str(PAPER4_ROOT / "src"))
 sys.path.insert(0, str(PAPER4_ROOT))
 sys.path.insert(0, str(ADDITION_ROOT))
+sys.path.append(str(REPOSITORY_ROOT))
 
+from portable_paths import resolve_config_data_root
 import run_official_baselines as base
 from adapters import build_official_model
 from common import require_cuda_device
@@ -35,6 +38,7 @@ base.build_official_model = build_official_model
 def load_config(path: str | Path) -> dict[str, Any]:
     path = Path(path)
     config = yaml.safe_load(path.read_text(encoding="utf-8"))
+    resolve_config_data_root(config, repository_root=REPOSITORY_ROOT)
     required = {"seed", "data", "split", "input_adapter", "models", "training"}
     missing = required - set(config)
     if missing:

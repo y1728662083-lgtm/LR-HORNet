@@ -31,6 +31,8 @@ if str(SRC_ROOT) not in sys.path:
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+from portable_paths import resolve_config_data_root
+
 
 MODEL_KEY_PREFIX: Final = "braindecode_"
 
@@ -495,6 +497,7 @@ def _run_architecture(config_path: Path, architecture: str) -> None:
 
     config_path = _resolve_project_path(config_path)
     config = deepcopy(load_config(config_path))
+    resolve_config_data_root(config, repository_root=PROJECT_ROOT)
     spec = get_baseline_spec(architecture)
     model_kwargs, n_classes = _baseline_runtime_context(config)
     config["model"] = {

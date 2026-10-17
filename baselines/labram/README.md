@@ -20,11 +20,20 @@ Weights are not duplicated in this code-only folder.
 - `ds003626_official_baselines.yaml`: exact hyperparameters used by the completed
   ds003626 result currently archived in experiment 4.4.1.
 - Russian, Spanish and Bimodal YAMLs: the current multidataset rerun settings.
+- `bci2020_official_baselines.yaml`: the hash-locked completed BCI2020 setting.
 - All splits use calibrated LOSO. Russian and Spanish independently use their
   within-language EEG-channel intersection.
 
-Edit each YAML's `data.root` before running. Bimodal training expects the
-official-code-derived FIF files under `derivatives/paper4/bimodal`.
+The package-local dispatcher schedules the original four-dataset batch. Run
+BCI2020 from the repository root with `run_bci2020_all_models_4gpu.sh`; that
+launcher preserves the archived YAML and writes a portable runtime copy with
+the requested dataset and output roots.
+
+Relative `data.root` values are resolved against the top-level LR-HORNet
+repository, independent of the launcher's working directory. Place datasets
+under the root README's `data/` layout, or set `data.root` to an absolute path.
+Bimodal training expects the official-code-derived FIF files under
+`derivatives/paper4/bimodal` within its dataset root.
 
 ## Environment and checkpoint
 

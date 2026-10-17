@@ -126,5 +126,9 @@ def main() -> None:
         print(f"{name}: parameters={count:,}")
 
 
+def test_section_4_5_models() -> None:
+    main()
+
+
 if __name__ == "__main__":
     main()

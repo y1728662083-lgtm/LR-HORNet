@@ -13,11 +13,15 @@ ROOT = Path(__file__).resolve().parents[1]
 CHECKPOINT_ROOT = ROOT / "checkpoints" / "main"
 OUTPUT_PATH = CHECKPOINT_ROOT / "manifest.csv"
 RESULT_TABLE = ROOT / "results" / "4.4.1" / "fold_level_results_with_val_acc.csv"
+BCI2020_SELECTION = (
+    ROOT / "results" / "4.4.1" / "bci2020" / "selected_checkpoints.csv"
+)
 EXPECTED_FOLDS = {
     "ds003626": 10,
     "bimodal_inner_speech": 4,
     "directional_words_russian": 12,
     "directional_words_spanish": 10,
+    "bci2020": 15,
 }
 
 
@@ -37,9 +41,26 @@ def main() -> None:
             if row["model"] == "LR-HORNet"
         ]
     result_index = {
-        (row["dataset_key"], int(row["fold"])): row
+        (row["dataset_key"], int(row["fold"])): {
+            "selected_epoch": row["selected_epoch"],
+            "validation_accuracy": row["val_accuracy"],
+            "test_accuracy": row["accuracy"],
+            "source_metrics_path": row["metrics_path"],
+            "source_metrics_sha256": row["metrics_sha256"],
+        }
         for row in result_rows
     }
+    with BCI2020_SELECTION.open(newline="", encoding="utf-8-sig") as handle:
+        for row in csv.DictReader(handle):
+            result_index[("bci2020", int(row["fold"]))] = {
+                "selected_epoch": row["selected_epoch"],
+                "validation_accuracy": row["validation_accuracy"],
+                "test_accuracy": row["test_accuracy"],
+                "source_metrics_path": (
+                    "external-bci2020/" + row["source_metrics_path"]
+                ),
+                "source_metrics_sha256": row["source_metrics_sha256"],
+            }
     if len(result_index) != sum(EXPECTED_FOLDS.values()):
         raise ValueError(
             f"Expected {sum(EXPECTED_FOLDS.values())} LR-HORNet result rows, "
@@ -68,10 +89,10 @@ def main() -> None:
                     "dataset": dataset,
                     "fold": fold,
                     "selected_epoch": int(result["selected_epoch"]),
-                    "validation_accuracy": result["val_accuracy"],
-                    "test_accuracy": result["accuracy"],
-                    "source_metrics_path": result["metrics_path"],
-                    "source_metrics_sha256": result["metrics_sha256"],
+                    "validation_accuracy": result["validation_accuracy"],
+                    "test_accuracy": result["test_accuracy"],
+                    "source_metrics_path": result["source_metrics_path"],
+                    "source_metrics_sha256": result["source_metrics_sha256"],
                     "path": path.relative_to(ROOT).as_posix(),
                     "bytes": path.stat().st_size,
                     "sha256": sha256_file(path),
